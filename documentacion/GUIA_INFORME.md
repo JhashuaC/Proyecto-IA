@@ -87,7 +87,7 @@ Mensaje: Urgente: su cuenta sera suspendida. Verifique usuario, contrasena y tok
 
 Resultado esperado: riesgo alto.
 
-Tambien se puede cargar el archivo `codigo/data/samples/phishing_demo.eml`, que incluye fallos SPF/DKIM/DMARC, dominios distintos en cabeceras y un adjunto ejecutable simulado.
+Tambien se puede cargar el archivo `codigo/data/samples/phishing_completo_banco.eml`, que incluye multiples `Received`, fallos SPF/DKIM/DMARC, dominios distintos en cabeceras, enlaces engañosos, formulario HTML y adjuntos simulados. Es el mejor caso para la demostracion en vivo.
 
 ### Caso legitimo
 

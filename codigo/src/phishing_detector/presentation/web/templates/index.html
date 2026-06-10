@@ -17,17 +17,22 @@
       <div class="nav-pills" aria-label="Ejemplos">
         <a href="/sample/phishing">Phishing</a>
         <a href="/sample/legit">Legitimo</a>
+        <a href="/sample-eml/phishing-completo">Descargar .eml</a>
       </div>
     </nav>
 
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Ciberseguridad + Inteligencia Artificial</p>
-        <h1>Analisis elegante y explicable contra phishing.</h1>
+        <h1>Detecta phishing sin complicarte.</h1>
         <p class="hero-text">
-          Evalua correos y URLs con una red neuronal manual, Naive Bayes y reglas expertas
-          para estimar riesgo, revisar cabeceras, adjuntos, enlaces e indicadores personalizados.
+          Carga un archivo .eml o pega un correo. La app revisa enlaces, cabeceras,
+          adjuntos e indicadores y te dice en lenguaje claro que tan riesgoso es.
         </p>
+        <div class="hero-actions">
+          <a href="#analysis-title">Analizar correo</a>
+          <a href="/sample-eml/phishing-completo">Bajar .eml de prueba</a>
+        </div>
       </div>
       <div class="hero-panel" aria-label="Resumen de modelos">
         <div class="orbital" aria-hidden="true">
@@ -42,45 +47,75 @@
     </header>
 
     <main class="workspace">
+      <section class="guide-strip" aria-label="Como usar la aplicacion">
+        <article>
+          <span>1</span>
+          <strong>Carga o pega</strong>
+          <p>Usa un archivo .eml, una URL o el texto del correo.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <strong>Analiza</strong>
+          <p>Presiona el boton y espera el nivel de riesgo.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <strong>Revisa la evidencia</strong>
+          <p>Lee las senales: cabeceras, adjuntos, enlaces e indicadores.</p>
+        </article>
+      </section>
+
       <section class="analysis-panel" aria-labelledby="analysis-title">
         <div class="panel-heading">
-          <p class="eyebrow">Analizador</p>
-          <h2 id="analysis-title">Correo o URL sospechosa</h2>
+          <p class="eyebrow">Paso principal</p>
+          <h2 id="analysis-title">Analizar un correo</h2>
+          <p class="panel-help">La forma mas sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo completo o pega los datos manualmente.</p>
         </div>
         <form method="post" action="/analyze" class="analysis-form" enctype="multipart/form-data">
           <div class="upload-zone">
-            <label for="eml_file">Cargar archivo .eml</label>
+            <label for="eml_file">Opcion recomendada: cargar archivo .eml</label>
             <input id="eml_file" name="eml_file" type="file" accept=".eml,message/rfc822">
-            <p>Si cargas un .eml, la app extrae asunto, remitente, enlaces, adjuntos y cabeceras de autenticacion.</p>
-          </div>
-
-          <label for="subject">Asunto</label>
-          <input id="subject" name="subject" value="{{ subject }}" placeholder="Cuenta bloqueada urgente" autocomplete="off">
-
-          <label for="url">URL principal</label>
-          <input id="url" name="url" value="{{ url }}" placeholder="https://sitio.example/ruta" autocomplete="off">
-
-          <div class="field-grid">
-            <div>
-              <label for="sender">From</label>
-              <input id="sender" name="sender" value="{{ sender }}" placeholder="soporte@empresa.example" autocomplete="off">
-            </div>
-            <div>
-              <label for="reply_to">Reply-To</label>
-              <input id="reply_to" name="reply_to" value="{{ reply_to }}" placeholder="responder@dominio.example" autocomplete="off">
-            </div>
-            <div>
-              <label for="return_path">Return-Path</label>
-              <input id="return_path" name="return_path" value="{{ return_path }}" placeholder="bounce@dominio.example" autocomplete="off">
-            </div>
-            <div>
-              <label for="authentication_results">Authentication-Results</label>
-              <input id="authentication_results" name="authentication_results" value="{{ authentication_results }}" placeholder="spf=pass dkim=pass dmarc=pass" autocomplete="off">
+            <p>La app extrae automaticamente asunto, remitente, enlaces, adjuntos y cabeceras de autenticacion.</p>
+            <div class="mini-actions">
+              <a href="/sample-eml/phishing-completo">Descargar .eml phishing completo</a>
+              <a href="/sample-eml/legitimo">Descargar .eml legitimo</a>
             </div>
           </div>
 
-          <label for="body">Contenido del mensaje</label>
-          <textarea id="body" name="body" placeholder="Pegue aqui el cuerpo del correo">{{ body }}</textarea>
+          <details class="manual-entry" open>
+            <summary>Ingresar datos manualmente</summary>
+            <label for="subject">Asunto</label>
+            <input id="subject" name="subject" value="{{ subject }}" placeholder="Cuenta bloqueada urgente" autocomplete="off">
+
+            <label for="url">URL principal</label>
+            <input id="url" name="url" value="{{ url }}" placeholder="https://sitio.example/ruta" autocomplete="off">
+
+            <label for="body">Contenido del mensaje</label>
+            <textarea id="body" name="body" placeholder="Pegue aqui el cuerpo del correo">{{ body }}</textarea>
+          </details>
+
+          <details class="manual-entry">
+            <summary>Campos avanzados de cabecera</summary>
+            <p class="inline-help">Opcional. Estos campos ayudan a detectar suplantacion y fallos de autenticacion.</p>
+            <div class="field-grid">
+              <div>
+                <label for="sender">From</label>
+                <input id="sender" name="sender" value="{{ sender }}" placeholder="soporte@empresa.example" autocomplete="off">
+              </div>
+              <div>
+                <label for="reply_to">Reply-To</label>
+                <input id="reply_to" name="reply_to" value="{{ reply_to }}" placeholder="responder@dominio.example" autocomplete="off">
+              </div>
+              <div>
+                <label for="return_path">Return-Path</label>
+                <input id="return_path" name="return_path" value="{{ return_path }}" placeholder="bounce@dominio.example" autocomplete="off">
+              </div>
+              <div>
+                <label for="authentication_results">Authentication-Results</label>
+                <input id="authentication_results" name="authentication_results" value="{{ authentication_results }}" placeholder="spf=pass dkim=pass dmarc=pass" autocomplete="off">
+              </div>
+            </div>
+          </details>
 
           <div class="actions">
             <button type="submit">Analizar riesgo</button>
@@ -92,8 +127,9 @@
 
       <aside class="insight-panel" aria-labelledby="metrics-title">
         <div class="panel-heading">
-          <p class="eyebrow">Entrenamiento</p>
-          <h2 id="metrics-title">Metricas internas</h2>
+          <p class="eyebrow">Estado del modelo</p>
+          <h2 id="metrics-title">Resumen tecnico</h2>
+          <p class="panel-help">Estos datos son utiles para la defensa: muestran el entrenamiento y la validacion interna.</p>
         </div>
         <div id="metrics-grid" class="metrics-grid"></div>
         <div class="loss-panel">
@@ -104,32 +140,37 @@
 
       <section class="indicator-panel" aria-labelledby="indicator-title">
         <div class="panel-heading">
-          <p class="eyebrow">Indicadores</p>
-          <h2 id="indicator-title">Reglas configurables</h2>
+          <p class="eyebrow">Personalizacion</p>
+          <h2 id="indicator-title">Indicadores configurables</h2>
+          <p class="panel-help">Agrega palabras, dominios o patrones que quieras detectar en futuros correos.</p>
         </div>
-        <form method="post" action="/indicators" class="indicator-form">
-          <div class="field-grid compact">
-            <div>
-              <label for="indicator_name">Nombre</label>
-              <input id="indicator_name" name="indicator_name" placeholder="Dominio corporativo falso">
+        <details class="manual-entry">
+          <summary>Agregar un nuevo indicador</summary>
+          <form method="post" action="/indicators" class="indicator-form">
+            <div class="field-grid compact">
+              <div>
+                <label for="indicator_name">Nombre</label>
+                <input id="indicator_name" name="indicator_name" placeholder="Dominio corporativo falso">
+              </div>
+              <div>
+                <label for="indicator_category">Categoria</label>
+                <input id="indicator_category" name="indicator_category" placeholder="Suplantacion">
+              </div>
+              <div>
+                <label for="indicator_pattern">Patron</label>
+                <input id="indicator_pattern" name="indicator_pattern" placeholder="empresa-login|verify-account">
+              </div>
+              <div>
+                <label for="indicator_weight">Peso</label>
+                <input id="indicator_weight" name="indicator_weight" type="number" min="1" max="30" value="8">
+              </div>
             </div>
-            <div>
-              <label for="indicator_category">Categoria</label>
-              <input id="indicator_category" name="indicator_category" placeholder="Suplantacion">
+            <p class="inline-help">Ejemplo simple: escribe <strong>verify-login</strong> para detectar URLs que contengan ese texto.</p>
+            <div class="actions">
+              <button type="submit">Guardar indicador</button>
             </div>
-            <div>
-              <label for="indicator_pattern">Patron regex</label>
-              <input id="indicator_pattern" name="indicator_pattern" placeholder="empresa-login|verify-account">
-            </div>
-            <div>
-              <label for="indicator_weight">Peso</label>
-              <input id="indicator_weight" name="indicator_weight" type="number" min="1" max="30" value="8">
-            </div>
-          </div>
-          <div class="actions">
-            <button type="submit">Agregar indicador</button>
-          </div>
-        </form>
+          </form>
+        </details>
         <div id="indicator-list" class="indicator-list"></div>
       </section>
 

@@ -88,7 +88,9 @@ a {
 }
 
 .nav-pills a,
-.actions a {
+.actions a,
+.hero-actions a,
+.mini-actions a {
   min-height: 38px;
   padding: 10px 14px;
   color: #263244;
@@ -150,6 +152,19 @@ h1 {
   color: #4f5b6f;
   font-size: 19px;
   line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.hero-actions a:first-child {
+  color: #fff;
+  background: linear-gradient(145deg, #111827, #0a84ff);
+  box-shadow: 0 16px 30px rgba(10, 132, 255, .2);
 }
 
 .hero-panel,
@@ -248,6 +263,56 @@ h1 {
   padding-bottom: 60px;
 }
 
+.guide-strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.guide-strip article {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  padding: 18px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 16px 44px rgba(26, 33, 46, .08);
+}
+
+.guide-strip span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: #fff;
+  font-weight: 850;
+  background: #111827;
+  border-radius: 50%;
+  grid-row: span 2;
+}
+
+.guide-strip strong {
+  align-self: end;
+}
+
+.guide-strip p,
+.panel-help,
+.inline-help {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.guide-strip p,
+.panel-help {
+  margin: 6px 0 0;
+}
+
+.inline-help {
+  margin: 12px 0 0;
+}
+
 .analysis-panel,
 .insight-panel,
 .indicator-panel,
@@ -301,6 +366,13 @@ textarea {
   line-height: 1.45;
 }
 
+.mini-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
 input[type="file"] {
   padding: 12px;
   min-height: auto;
@@ -314,6 +386,23 @@ input[type="file"] {
 
 .field-grid.compact label {
   font-size: 13px;
+}
+
+.manual-entry {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, .54);
+  border: 1px solid rgba(37, 48, 66, .11);
+  border-radius: 18px;
+}
+
+.manual-entry summary {
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.manual-entry[open] summary {
+  margin-bottom: 8px;
 }
 
 input {
@@ -498,6 +587,25 @@ button {
   border-radius: 999px;
 }
 
+.friendly-verdict {
+  margin-bottom: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.friendly-verdict strong {
+  display: block;
+  font-size: 20px;
+}
+
+.friendly-verdict p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .risk-bar span {
   display: block;
   height: 100%;
@@ -675,6 +783,10 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .guide-strip {
+    grid-template-columns: 1fr;
+  }
+
   .indicator-list {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -693,12 +805,16 @@ button {
   }
 
   .nav-pills,
-  .actions {
+  .actions,
+  .hero-actions,
+  .mini-actions {
     width: 100%;
   }
 
   .nav-pills a,
   .actions a,
+  .hero-actions a,
+  .mini-actions a,
   button {
     flex: 1;
   }

@@ -47,6 +47,23 @@ function renderResult() {
   }
 
   const level = result.level.toLowerCase();
+  const guidance = {
+    alto: {
+      title: "No confies en este correo",
+      body: "No abras enlaces ni adjuntos. Reportalo al area de TI o elimina el mensaje si era una prueba.",
+    },
+    medio: {
+      title: "Revisalo con cuidado",
+      body: "Verifica el remitente por otro canal antes de responder, descargar archivos o iniciar sesion.",
+    },
+    bajo: {
+      title: "Parece seguro",
+      body: "No se detectaron senales criticas, pero confirma siempre que el remitente y el contexto tengan sentido.",
+    },
+  }[level] || {
+    title: "Resultado calculado",
+    body: "Revisa las senales tecnicas para tomar una decision.",
+  };
   const techniques = result.technique_scores.map((item) => `
     <article class="tech-card">
       <div class="score-ring" style="--score:${item.score}">
@@ -101,6 +118,10 @@ function renderResult() {
       </div>
     </div>
     <div class="risk-bar"><span style="width:${result.final_score}%"></span></div>
+    <div class="friendly-verdict">
+      <strong>${escapeHtml(guidance.title)}</strong>
+      <p>${escapeHtml(guidance.body)}</p>
+    </div>
     <div class="tech-grid">${techniques}</div>
     <div class="summary-grid">${summaryCards}</div>
     <div class="match-grid">${matchHtml}</div>

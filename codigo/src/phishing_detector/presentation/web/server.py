@@ -18,6 +18,7 @@ PORT = 8000
 WEB_DIR = Path(__file__).parent
 TEMPLATE = WEB_DIR / "templates" / "index.html"
 STATIC_DIR = WEB_DIR / "static"
+SAMPLE_DIR = Path("codigo/data/samples")
 
 EXAMPLES = {
     "phishing": EmailAnalysisRequest(
@@ -115,6 +116,9 @@ class WebHandler(BaseHTTPRequestHandler):
         if self.path.startswith("/static/"):
             self._serve_static()
             return
+        if self.path.startswith("/sample-eml/"):
+            self._serve_sample_eml()
+            return
         if self.path == "/sample/phishing":
             request = EXAMPLES["phishing"]
             result = self.container.analyze_email.execute(request)
@@ -126,6 +130,29 @@ class WebHandler(BaseHTTPRequestHandler):
             self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
             return
         self._send(200, render_template(self.container), "text/html; charset=utf-8")
+
+    def _serve_sample_eml(self):
+        name = self.path.removeprefix("/sample-eml/").split("?", 1)[0]
+        allowed = {
+            "phishing-completo": "phishing_completo_banco.eml",
+            "phishing-basico": "phishing_demo.eml",
+            "legitimo": "legit_demo.eml",
+        }
+        filename = allowed.get(name)
+        if not filename:
+            self._send(404, "Ejemplo no encontrado", "text/plain; charset=utf-8")
+            return
+        target = SAMPLE_DIR / filename
+        if not target.exists():
+            self._send(404, "Archivo de ejemplo no encontrado", "text/plain; charset=utf-8")
+            return
+        body = target.read_bytes()
+        self.send_response(200)
+        self.send_header("Content-Type", "message/rfc822")
+        self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def do_POST(self):
         if self.path == "/indicators":

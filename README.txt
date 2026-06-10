@@ -62,7 +62,9 @@ Uso:
 Ejemplos incluidos:
 - http://127.0.0.1:8000/sample/phishing
 - http://127.0.0.1:8000/sample/legit
+- http://127.0.0.1:8000/sample-eml/phishing-completo
 - codigo/data/samples/phishing_demo.eml
+- codigo/data/samples/phishing_completo_banco.eml
 - codigo/data/samples/legit_demo.eml
 
 Endpoint JSON:
