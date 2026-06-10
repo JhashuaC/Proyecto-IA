@@ -1,0 +1,222 @@
+"""Servidor HTTP local para la interfaz profesional del detector."""
+
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from urllib.parse import parse_qs
+import cgi
+import html
+import json
+import mimetypes
+
+from phishing_detector.domain.entities import EmailAnalysisRequest, SecurityIndicator
+from phishing_detector.infrastructure.bootstrap import ApplicationContainer
+from phishing_detector.infrastructure.email_parser import parse_eml
+
+
+HOST = "127.0.0.1"
+PORT = 8000
+WEB_DIR = Path(__file__).parent
+TEMPLATE = WEB_DIR / "templates" / "index.html"
+STATIC_DIR = WEB_DIR / "static"
+
+EXAMPLES = {
+    "phishing": EmailAnalysisRequest(
+        subject="Cuenta bloqueada urgente",
+        url="http://seguridad-banco.example.verify-login.ru/acceso",
+        body="Urgente: su cuenta sera suspendida. Verifique usuario, contrasena y token en menos de 10 minutos.",
+    ),
+    "legit": EmailAnalysisRequest(
+        subject="Aviso de mantenimiento",
+        url="https://hosting.example/status",
+        body="El servicio tendra una ventana de mantenimiento programada el sabado de 1 a 3 a.m.",
+    ),
+}
+
+
+def result_to_dict(result):
+    return {
+        "decision": result.decision,
+        "level": result.level,
+        "final_score": result.final_score,
+        "technique_scores": [
+            {"name": score.name, "score": score.score, "details": score.details}
+            for score in result.technique_scores
+        ],
+        "reasons": result.reasons,
+        "indicator_matches": result.indicator_matches,
+        "email_summary": result.email_summary,
+        "features": result.features,
+        "metrics": result.metrics,
+        "is_risky": result.is_risky,
+    }
+
+
+def json_for_script(payload):
+    return json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+
+
+def render_template(container, result=None, values=None):
+    values = values or EmailAnalysisRequest(subject="", body="", url="")
+    result_payload = "null" if result is None else json_for_script(result_to_dict(result))
+    indicators = [
+        {
+            "name": item.name,
+            "pattern": item.pattern,
+            "weight": item.weight,
+            "category": item.category,
+            "enabled": item.enabled,
+        }
+        for item in container.indicator_repository.list()
+    ]
+    data = {
+        "subject": html.escape(values.subject),
+        "url": html.escape(values.url),
+        "body": html.escape(values.body),
+        "sender": html.escape(values.sender),
+        "reply_to": html.escape(values.reply_to),
+        "return_path": html.escape(values.return_path),
+        "authentication_results": html.escape(values.authentication_results),
+        "metrics_json": json_for_script(container.metrics),
+        "result_json": result_payload,
+        "indicators_json": json_for_script(indicators),
+    }
+    template = TEMPLATE.read_text(encoding="utf-8")
+    for key, value in data.items():
+        template = template.replace("{{ " + key + " }}", value)
+    return template
+
+
+class WebHandler(BaseHTTPRequestHandler):
+    container = ApplicationContainer()
+
+    def _send(self, status, body, content_type):
+        encoded = body if isinstance(body, bytes) else body.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+        self.wfile.write(encoded)
+
+    def _redirect(self, path):
+        self.send_response(303)
+        self.send_header("Location", path)
+        self.end_headers()
+
+    def _serve_static(self):
+        relative = self.path.removeprefix("/static/").split("?", 1)[0]
+        target = (STATIC_DIR / relative).resolve()
+        if STATIC_DIR.resolve() not in target.parents or not target.exists():
+            self._send(404, "Archivo no encontrado", "text/plain; charset=utf-8")
+            return
+        content_type = mimetypes.guess_type(str(target))[0] or "application/octet-stream"
+        self._send(200, target.read_bytes(), content_type)
+
+    def do_GET(self):
+        if self.path.startswith("/static/"):
+            self._serve_static()
+            return
+        if self.path == "/sample/phishing":
+            request = EXAMPLES["phishing"]
+            result = self.container.analyze_email.execute(request)
+            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+            return
+        if self.path == "/sample/legit":
+            request = EXAMPLES["legit"]
+            result = self.container.analyze_email.execute(request)
+            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+            return
+        self._send(200, render_template(self.container), "text/html; charset=utf-8")
+
+    def do_POST(self):
+        if self.path == "/indicators":
+            self._handle_indicator_create()
+            return
+        request = self._read_analysis_request()
+        result = self.container.analyze_email.execute(request)
+        if self.path == "/api/analyze":
+            self._send(200, json.dumps(result_to_dict(result), ensure_ascii=False, indent=2), "application/json; charset=utf-8")
+        else:
+            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+
+    def _read_analysis_request(self):
+        content_type = self.headers.get("Content-Type", "")
+        if content_type.startswith("multipart/form-data"):
+            form = cgi.FieldStorage(
+                fp=self.rfile,
+                headers=self.headers,
+                environ={
+                    "REQUEST_METHOD": "POST",
+                    "CONTENT_TYPE": content_type,
+                    "CONTENT_LENGTH": self.headers.get("Content-Length", "0"),
+                },
+            )
+            upload = form["eml_file"] if "eml_file" in form else None
+            if upload is not None and getattr(upload, "filename", ""):
+                raw = upload.file.read()
+                request = parse_eml(raw, upload.filename)
+                return EmailAnalysisRequest(
+                    subject=self._field(form, "subject") or request.subject,
+                    url=self._field(form, "url") or request.url,
+                    body=self._field(form, "body") or request.body,
+                    sender=self._field(form, "sender") or request.sender,
+                    reply_to=self._field(form, "reply_to") or request.reply_to,
+                    return_path=self._field(form, "return_path") or request.return_path,
+                    authentication_results=self._field(form, "authentication_results") or request.authentication_results,
+                    headers=request.headers,
+                    links=request.links,
+                    attachments=request.attachments,
+                    source_name=request.source_name,
+                )
+            return EmailAnalysisRequest(
+                subject=self._field(form, "subject"),
+                url=self._field(form, "url"),
+                body=self._field(form, "body"),
+                sender=self._field(form, "sender"),
+                reply_to=self._field(form, "reply_to"),
+                return_path=self._field(form, "return_path"),
+                authentication_results=self._field(form, "authentication_results"),
+            )
+
+        length = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(length).decode("utf-8")
+        data = {key: values[0] for key, values in parse_qs(raw).items()}
+        request = EmailAnalysisRequest(
+            subject=data.get("subject", ""),
+            url=data.get("url", ""),
+            body=data.get("body", ""),
+            sender=data.get("sender", ""),
+            reply_to=data.get("reply_to", ""),
+            return_path=data.get("return_path", ""),
+            authentication_results=data.get("authentication_results", ""),
+        )
+        return request
+
+    def _field(self, form, key):
+        if key not in form:
+            return ""
+        value = form[key]
+        if isinstance(value, list):
+            value = value[0]
+        return value.value if isinstance(value.value, str) else ""
+
+    def _handle_indicator_create(self):
+        length = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(length).decode("utf-8")
+        data = {key: values[0] for key, values in parse_qs(raw).items()}
+        name = data.get("indicator_name", "").strip()
+        pattern = data.get("indicator_pattern", "").strip()
+        category = data.get("indicator_category", "Personalizado").strip() or "Personalizado"
+        try:
+            weight = max(1, min(30, int(data.get("indicator_weight", "8"))))
+        except ValueError:
+            weight = 8
+        if name and pattern:
+            self.container.indicator_repository.add(SecurityIndicator(name, pattern, weight, category))
+        self._redirect("/")
+
+
+def run(host=HOST, port=PORT):
+    server = ThreadingHTTPServer((host, port), WebHandler)
+    print(f"Detector iniciado en http://{host}:{port}")
+    print("Presione Ctrl+C para detener.")
+    server.serve_forever()

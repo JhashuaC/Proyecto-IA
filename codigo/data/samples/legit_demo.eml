@@ -1,0 +1,11 @@
+From: Soporte Campus <soporte@campus.example>
+Reply-To: soporte@campus.example
+Return-Path: <bounce@campus.example>
+Subject: Aviso de mantenimiento programado
+Authentication-Results: mx.example; spf=pass smtp.mailfrom=campus.example; dkim=pass; dmarc=pass
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+El aula virtual tendra una ventana de mantenimiento programada el sabado de 1 a 3 a.m.
+Puede consultar el estado del servicio en https://campus.example/status.
+

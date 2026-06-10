@@ -1,0 +1,2 @@
+"""Interfaz web local."""
+

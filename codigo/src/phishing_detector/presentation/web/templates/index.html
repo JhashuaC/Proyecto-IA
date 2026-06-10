@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SentinelMail AI | Detector de phishing</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <nav class="topbar" aria-label="Principal">
+      <a class="brand" href="/">
+        <span class="brand-mark">S</span>
+        <span>SentinelMail AI</span>
+      </a>
+      <div class="nav-pills" aria-label="Ejemplos">
+        <a href="/sample/phishing">Phishing</a>
+        <a href="/sample/legit">Legitimo</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Ciberseguridad + Inteligencia Artificial</p>
+        <h1>Analisis elegante y explicable contra phishing.</h1>
+        <p class="hero-text">
+          Evalua correos y URLs con una red neuronal manual, Naive Bayes y reglas expertas
+          para estimar riesgo, revisar cabeceras, adjuntos, enlaces e indicadores personalizados.
+        </p>
+      </div>
+      <div class="hero-panel" aria-label="Resumen de modelos">
+        <div class="orbital" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="model-stack">
+          <div><strong>NN</strong><span>Red neuronal</span></div>
+          <div><strong>NB</strong><span>Naive Bayes</span></div>
+          <div><strong>SE</strong><span>Sistema experto</span></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="analysis-panel" aria-labelledby="analysis-title">
+        <div class="panel-heading">
+          <p class="eyebrow">Analizador</p>
+          <h2 id="analysis-title">Correo o URL sospechosa</h2>
+        </div>
+        <form method="post" action="/analyze" class="analysis-form" enctype="multipart/form-data">
+          <div class="upload-zone">
+            <label for="eml_file">Cargar archivo .eml</label>
+            <input id="eml_file" name="eml_file" type="file" accept=".eml,message/rfc822">
+            <p>Si cargas un .eml, la app extrae asunto, remitente, enlaces, adjuntos y cabeceras de autenticacion.</p>
+          </div>
+
+          <label for="subject">Asunto</label>
+          <input id="subject" name="subject" value="{{ subject }}" placeholder="Cuenta bloqueada urgente" autocomplete="off">
+
+          <label for="url">URL principal</label>
+          <input id="url" name="url" value="{{ url }}" placeholder="https://sitio.example/ruta" autocomplete="off">
+
+          <div class="field-grid">
+            <div>
+              <label for="sender">From</label>
+              <input id="sender" name="sender" value="{{ sender }}" placeholder="soporte@empresa.example" autocomplete="off">
+            </div>
+            <div>
+              <label for="reply_to">Reply-To</label>
+              <input id="reply_to" name="reply_to" value="{{ reply_to }}" placeholder="responder@dominio.example" autocomplete="off">
+            </div>
+            <div>
+              <label for="return_path">Return-Path</label>
+              <input id="return_path" name="return_path" value="{{ return_path }}" placeholder="bounce@dominio.example" autocomplete="off">
+            </div>
+            <div>
+              <label for="authentication_results">Authentication-Results</label>
+              <input id="authentication_results" name="authentication_results" value="{{ authentication_results }}" placeholder="spf=pass dkim=pass dmarc=pass" autocomplete="off">
+            </div>
+          </div>
+
+          <label for="body">Contenido del mensaje</label>
+          <textarea id="body" name="body" placeholder="Pegue aqui el cuerpo del correo">{{ body }}</textarea>
+
+          <div class="actions">
+            <button type="submit">Analizar riesgo</button>
+            <a href="/sample/phishing">Probar ataque</a>
+            <a href="/sample/legit">Probar legitimo</a>
+          </div>
+        </form>
+      </section>
+
+      <aside class="insight-panel" aria-labelledby="metrics-title">
+        <div class="panel-heading">
+          <p class="eyebrow">Entrenamiento</p>
+          <h2 id="metrics-title">Metricas internas</h2>
+        </div>
+        <div id="metrics-grid" class="metrics-grid"></div>
+        <div class="loss-panel">
+          <span>Perdida de la red neuronal</span>
+          <div id="loss-line" class="loss-line" aria-hidden="true"></div>
+        </div>
+      </aside>
+
+      <section class="indicator-panel" aria-labelledby="indicator-title">
+        <div class="panel-heading">
+          <p class="eyebrow">Indicadores</p>
+          <h2 id="indicator-title">Reglas configurables</h2>
+        </div>
+        <form method="post" action="/indicators" class="indicator-form">
+          <div class="field-grid compact">
+            <div>
+              <label for="indicator_name">Nombre</label>
+              <input id="indicator_name" name="indicator_name" placeholder="Dominio corporativo falso">
+            </div>
+            <div>
+              <label for="indicator_category">Categoria</label>
+              <input id="indicator_category" name="indicator_category" placeholder="Suplantacion">
+            </div>
+            <div>
+              <label for="indicator_pattern">Patron regex</label>
+              <input id="indicator_pattern" name="indicator_pattern" placeholder="empresa-login|verify-account">
+            </div>
+            <div>
+              <label for="indicator_weight">Peso</label>
+              <input id="indicator_weight" name="indicator_weight" type="number" min="1" max="30" value="8">
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit">Agregar indicador</button>
+          </div>
+        </form>
+        <div id="indicator-list" class="indicator-list"></div>
+      </section>
+
+      <section id="result-panel" class="result-panel" aria-live="polite"></section>
+
+      <section class="architecture-strip" aria-label="Arquitectura limpia">
+        <div>
+          <span>Dominio</span>
+          <strong>Entidades y politicas</strong>
+        </div>
+        <div>
+          <span>Aplicacion</span>
+          <strong>Caso de uso</strong>
+        </div>
+        <div>
+          <span>Infraestructura</span>
+          <strong>IA manual y datos</strong>
+        </div>
+        <div>
+          <span>Presentacion</span>
+          <strong>Web local</strong>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    window.__METRICS__ = {{ metrics_json }};
+    window.__RESULT__ = {{ result_json }};
+    window.__INDICATORS__ = {{ indicators_json }};
+  </script>
+</body>
+</html>
