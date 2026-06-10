@@ -180,3 +180,32 @@ document.querySelectorAll(".analysis-form").forEach((form) => {
     }
   });
 });
+
+document.querySelectorAll(".upload-zone").forEach((zone) => {
+  const input = zone.querySelector("input[type='file']");
+  if (!input) return;
+
+  const status = document.createElement("div");
+  status.className = "file-status";
+  status.textContent = "Ningun archivo seleccionado";
+  zone.appendChild(status);
+
+  input.addEventListener("change", () => {
+    const file = input.files && input.files[0];
+    zone.classList.toggle("file-selected", Boolean(file));
+    status.textContent = file ? `Archivo listo: ${file.name}` : "Ningun archivo seleccionado";
+  });
+
+  ["dragenter", "dragover"].forEach((eventName) => {
+    zone.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      zone.classList.add("drag-over");
+    });
+  });
+
+  ["dragleave", "drop"].forEach((eventName) => {
+    zone.addEventListener(eventName, () => {
+      zone.classList.remove("drag-over");
+    });
+  });
+});
