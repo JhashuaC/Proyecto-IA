@@ -42,7 +42,16 @@ function renderMetrics() {
 function renderResult() {
   const panel = document.querySelector("#result-panel");
   if (!panel || !result) {
-    if (panel) panel.classList.add("empty");
+    if (panel) {
+      panel.classList.add("empty");
+      panel.innerHTML = `
+        <div class="empty-state">
+          <span>Listo para analizar</span>
+          <h2>Tu resultado aparecera aqui</h2>
+          <p>Carga un archivo .eml o pega el contenido del correo y presiona Analizar riesgo. El panel se actualizara automaticamente.</p>
+        </div>
+      `;
+    }
     return;
   }
 
@@ -134,6 +143,13 @@ function renderResult() {
       <ul>${attachmentHtml}</ul>
     </div>
   `;
+
+  const shouldFocusResult = window.location.hash === "#result-panel" || result.final_score !== undefined;
+  if (shouldFocusResult) {
+    window.requestAnimationFrame(() => {
+      panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }
 }
 
 function renderIndicators() {
@@ -154,3 +170,13 @@ function renderIndicators() {
 renderMetrics();
 renderResult();
 renderIndicators();
+
+document.querySelectorAll(".analysis-form").forEach((form) => {
+  form.addEventListener("submit", () => {
+    const button = form.querySelector("button[type='submit']");
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Analizando...";
+    }
+  });
+});

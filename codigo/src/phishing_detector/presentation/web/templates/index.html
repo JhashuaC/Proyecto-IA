@@ -24,24 +24,26 @@
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Ciberseguridad + Inteligencia Artificial</p>
-        <h1>Detecta phishing sin complicarte.</h1>
+        <h1>Detecta phishing con claridad.</h1>
         <p class="hero-text">
-          Carga un archivo .eml o pega un correo. La app revisa enlaces, cabeceras,
-          adjuntos e indicadores y te dice en lenguaje claro que tan riesgoso es.
+          Carga un archivo .eml o pega un correo. SentinelMail revisa enlaces,
+          cabeceras, adjuntos e indicadores y te muestra un veredicto facil de entender.
         </p>
         <div class="hero-actions">
           <a href="#analysis-title">Analizar correo</a>
           <a href="/sample-eml/phishing-completo">Bajar .eml de prueba</a>
         </div>
       </div>
-      <div class="hero-panel" aria-label="Resumen de modelos">
-        <div class="orbital" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="model-stack">
-          <div><strong>NN</strong><span>Red neuronal</span></div>
-          <div><strong>NB</strong><span>Naive Bayes</span></div>
-          <div><strong>SE</strong><span>Sistema experto</span></div>
+      <div class="hero-panel" aria-label="Resumen de analisis">
+        <div class="device-preview">
+          <div class="preview-bar"></div>
+          <div class="preview-row strong"></div>
+          <div class="preview-row"></div>
+          <div class="preview-row short"></div>
+          <div class="preview-result">
+            <span>Riesgo</span>
+            <strong>Explicable</strong>
+          </div>
         </div>
       </div>
     </header>
@@ -71,7 +73,7 @@
           <h2 id="analysis-title">Analizar un correo</h2>
           <p class="panel-help">La forma mas sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo completo o pega los datos manualmente.</p>
         </div>
-        <form method="post" action="/analyze" class="analysis-form" enctype="multipart/form-data">
+        <form method="post" action="/analyze#result-panel" class="analysis-form" enctype="multipart/form-data">
           <div class="upload-zone">
             <label for="eml_file">Opcion recomendada: cargar archivo .eml</label>
             <input id="eml_file" name="eml_file" type="file" accept=".eml,message/rfc822">
@@ -125,6 +127,8 @@
         </form>
       </section>
 
+      <section id="result-panel" class="result-panel" aria-live="polite"></section>
+
       <aside class="insight-panel" aria-labelledby="metrics-title">
         <div class="panel-heading">
           <p class="eyebrow">Estado del modelo</p>
@@ -173,8 +177,6 @@
         </details>
         <div id="indicator-list" class="indicator-list"></div>
       </section>
-
-      <section id="result-panel" class="result-panel" aria-live="polite"></section>
 
       <section class="architecture-strip" aria-label="Arquitectura limpia">
         <div>
