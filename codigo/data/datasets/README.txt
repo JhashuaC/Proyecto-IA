@@ -1,7 +1,7 @@
 Datasets reales y públicos
 ==========================
 
-Coloque aquí corpus externos para que SentinelMail AI los use automáticamente
+Aqui se pueden colocar los corpus externos para que SentinelMail AI los use automáticamente
 en el entrenamiento y en la validación.
 
 Formatos soportados:
