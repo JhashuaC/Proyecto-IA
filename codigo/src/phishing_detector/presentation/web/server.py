@@ -10,7 +10,9 @@ import mimetypes
 
 from phishing_detector.domain.entities import EmailAnalysisRequest, SecurityIndicator
 from phishing_detector.infrastructure.bootstrap import ApplicationContainer
+from phishing_detector.infrastructure.data.analysis_history import JsonAnalysisHistory
 from phishing_detector.infrastructure.email_parser import parse_eml
+from phishing_detector.infrastructure.reports import create_pdf_report
 
 
 HOST = "127.0.0.1"
@@ -19,22 +21,23 @@ WEB_DIR = Path(__file__).parent
 TEMPLATE = WEB_DIR / "templates" / "index.html"
 STATIC_DIR = WEB_DIR / "static"
 SAMPLE_DIR = Path("codigo/data/samples")
+REPORT_DIR = Path("codigo/data/reports")
 
 EXAMPLES = {
     "phishing": EmailAnalysisRequest(
         subject="Cuenta bloqueada urgente",
         url="http://seguridad-banco.example.verify-login.ru/acceso",
-        body="Urgente: su cuenta sera suspendida. Verifique usuario, contrasena y token en menos de 10 minutos.",
+        body="Urgente: su cuenta será suspendida. Verifique usuario, contraseña y token en menos de 10 minutos.",
     ),
     "legit": EmailAnalysisRequest(
         subject="Aviso de mantenimiento",
         url="https://hosting.example/status",
-        body="El servicio tendra una ventana de mantenimiento programada el sabado de 1 a 3 a.m.",
+        body="El servicio tendrá una ventana de mantenimiento programada el sábado de 1 a 3 a.m.",
     ),
 }
 
 
-def result_to_dict(result):
+def result_to_dict(result, report_url=""):
     return {
         "decision": result.decision,
         "level": result.level,
@@ -49,6 +52,7 @@ def result_to_dict(result):
         "features": result.features,
         "metrics": result.metrics,
         "is_risky": result.is_risky,
+        "report_url": report_url,
     }
 
 
@@ -56,9 +60,9 @@ def json_for_script(payload):
     return json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
-def render_template(container, result=None, values=None):
+def render_template(container, result=None, values=None, result_payload=None):
     values = values or EmailAnalysisRequest(subject="", body="", url="")
-    result_payload = "null" if result is None else json_for_script(result_to_dict(result))
+    result_json = "null" if result is None and result_payload is None else json_for_script(result_payload or result_to_dict(result))
     indicators = [
         {
             "name": item.name,
@@ -78,8 +82,9 @@ def render_template(container, result=None, values=None):
         "return_path": html.escape(values.return_path),
         "authentication_results": html.escape(values.authentication_results),
         "metrics_json": json_for_script(container.metrics),
-        "result_json": result_payload,
+        "result_json": result_json,
         "indicators_json": json_for_script(indicators),
+        "history_json": json_for_script(container.history.list()),
     }
     template = TEMPLATE.read_text(encoding="utf-8")
     for key, value in data.items():
@@ -89,6 +94,7 @@ def render_template(container, result=None, values=None):
 
 class WebHandler(BaseHTTPRequestHandler):
     container = ApplicationContainer()
+    container.history = JsonAnalysisHistory()
 
     def _send(self, status, body, content_type):
         encoded = body if isinstance(body, bytes) else body.encode("utf-8")
@@ -119,15 +125,20 @@ class WebHandler(BaseHTTPRequestHandler):
         if self.path.startswith("/sample-eml/"):
             self._serve_sample_eml()
             return
+        if self.path.startswith("/reports/"):
+            self._serve_report()
+            return
         if self.path == "/sample/phishing":
             request = EXAMPLES["phishing"]
             result = self.container.analyze_email.execute(request)
-            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+            payload = self._record_result(request, result)
+            self._send(200, render_template(self.container, result, request, payload), "text/html; charset=utf-8")
             return
         if self.path == "/sample/legit":
             request = EXAMPLES["legit"]
             result = self.container.analyze_email.execute(request)
-            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+            payload = self._record_result(request, result)
+            self._send(200, render_template(self.container, result, request, payload), "text/html; charset=utf-8")
             return
         self._send(200, render_template(self.container), "text/html; charset=utf-8")
 
@@ -160,10 +171,33 @@ class WebHandler(BaseHTTPRequestHandler):
             return
         request = self._read_analysis_request()
         result = self.container.analyze_email.execute(request)
+        payload = self._record_result(request, result)
         if self.path == "/api/analyze":
-            self._send(200, json.dumps(result_to_dict(result), ensure_ascii=False, indent=2), "application/json; charset=utf-8")
+            self._send(200, json.dumps(payload, ensure_ascii=False, indent=2), "application/json; charset=utf-8")
         else:
-            self._send(200, render_template(self.container, result, request), "text/html; charset=utf-8")
+            self._send(200, render_template(self.container, result, request, payload), "text/html; charset=utf-8")
+
+    def _record_result(self, request, result):
+        payload = result_to_dict(result)
+        report_path = create_pdf_report(request, payload)
+        report_url = f"/reports/{report_path.name}"
+        payload["report_url"] = report_url
+        self.container.history.add(request, payload, report_url)
+        return payload
+
+    def _serve_report(self):
+        relative = self.path.removeprefix("/reports/").split("?", 1)[0]
+        target = (REPORT_DIR / relative).resolve()
+        if REPORT_DIR.resolve() not in target.parents or not target.exists() or target.suffix.lower() != ".pdf":
+            self._send(404, "Reporte no encontrado", "text/plain; charset=utf-8")
+            return
+        body = target.read_bytes()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/pdf")
+        self.send_header("Content-Disposition", f'inline; filename="{target.name}"')
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _read_analysis_request(self):
         content_type = self.headers.get("Content-Type", "")

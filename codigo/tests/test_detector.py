@@ -23,7 +23,7 @@ class DetectorSmokeTests(unittest.TestCase):
         result = self.container.analyze_email.execute(EmailAnalysisRequest(
             subject="Cuenta bloqueada urgente",
             url="http://seguridad-banco.example.verify-login.ru/acceso",
-            body="Urgente: su cuenta sera suspendida. Verifique usuario, contrasena y token.",
+            body="Urgente: su cuenta será suspendida. Verifique usuario, contraseña y token.",
         ))
         self.assertEqual(result.level, "ALTO")
 
@@ -31,7 +31,7 @@ class DetectorSmokeTests(unittest.TestCase):
         result = self.container.analyze_email.execute(EmailAnalysisRequest(
             subject="Aviso de mantenimiento",
             url="https://hosting.example/status",
-            body="El servicio tendra una ventana de mantenimiento programada el sabado.",
+            body="El servicio tendrá una ventana de mantenimiento programada el sábado.",
         ))
         self.assertEqual(result.level, "BAJO")
 

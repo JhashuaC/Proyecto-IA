@@ -9,12 +9,12 @@ from phishing_detector.domain.entities import EmailAnalysisRequest
 
 SUSPICIOUS_WORDS = {
     "urgente", "suspendida", "bloqueada", "bloqueo", "verifique", "validar",
-    "confirmar", "contrasena", "password", "token", "tarjeta", "premio",
+    "confirmar", "contrasena", "contraseña", "password", "token", "tarjeta", "premio",
     "gratis", "vence", "obligatoria", "reembolso", "bancaria", "expire",
     "identidad", "seguridad", "multa", "desbloquear",
 }
 URGENCY_WORDS = {"urgente", "inmediatamente", "hoy", "vence", "expira", "ahora", "obligatoria"}
-CREDENTIAL_WORDS = {"usuario", "clave", "contrasena", "password", "token", "sesion", "login"}
+CREDENTIAL_WORDS = {"usuario", "clave", "contrasena", "contraseña", "password", "token", "sesion", "sesión", "login"}
 MONEY_WORDS = {"tarjeta", "banco", "bancaria", "pago", "reembolso", "premio", "transferencia", "fondos"}
 SUSPICIOUS_TLDS = {"top", "biz", "ru", "info", "co"}
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "tiny.example"}
@@ -35,7 +35,7 @@ class LinkParser(HTMLParser):
 
 
 def tokenize(text):
-    return re.findall(r"[a-zA-Z0-9]+", text.lower())
+    return re.findall(r"[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ]+", text.lower())
 
 
 def extract_url(text):
@@ -70,6 +70,10 @@ class SecurityFeatureExtractor:
         link_count = len(set(parser.links + request.links + ([found_url] if found_url else [])))
         tld = domain.rsplit(".", 1)[-1] if "." in domain else ""
         attachment_names = " ".join(item.filename for item in request.attachments)
+        risky_attachment_signals = sum(
+            1 for item in request.attachments
+            if item.risk_notes or item.has_double_extension or item.macro_suspected
+        )
         auth = request.authentication_results.lower()
 
         return [
@@ -95,6 +99,7 @@ class SecurityFeatureExtractor:
             1.0 if "spf=fail" in auth or "dkim=fail" in auth or "dmarc=fail" in auth else 0.0,
             safe_ratio(len(request.links), 12),
             1.0 if "xn--" in domain else 0.0,
+            safe_ratio(risky_attachment_signals, 5),
         ]
 
     def text(self, request: EmailAnalysisRequest):

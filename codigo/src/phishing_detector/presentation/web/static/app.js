@@ -1,6 +1,7 @@
 const metrics = window.__METRICS__ || {};
 const result = window.__RESULT__;
 const indicators = window.__INDICATORS__ || [];
+const historyRows = window.__HISTORY__ || [];
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -12,8 +13,11 @@ function escapeHtml(value) {
 }
 
 const metricLabels = [
-  ["total", "Ejemplos"],
-  ["accuracy", "Exactitud"],
+  ["train_total", "Entrenamiento"],
+  ["test_total", "Prueba"],
+  ["train_accuracy", "Exactitud entrenamiento"],
+  ["test_accuracy", "Exactitud prueba"],
+  ["external_examples", "Ejemplos externos"],
   ["tp", "Verd. positivos"],
   ["tn", "Verd. negativos"],
   ["fp", "Falsos positivos"],
@@ -24,7 +28,7 @@ function renderMetrics() {
   const target = document.querySelector("#metrics-grid");
   if (!target) return;
   target.innerHTML = metricLabels.map(([key, label]) => {
-    const suffix = key === "accuracy" ? "%" : "";
+    const suffix = key.includes("accuracy") ? "%" : "";
     return `<article class="metric-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(metrics[key])}${suffix}</strong></article>`;
   }).join("");
 
@@ -47,8 +51,8 @@ function renderResult() {
       panel.innerHTML = `
         <div class="empty-state">
           <span>Listo para analizar</span>
-          <h2>Tu resultado aparecera aqui</h2>
-          <p>Carga un archivo .eml o pega el contenido del correo y presiona Analizar riesgo. El panel se actualizara automaticamente.</p>
+          <h2>Tu resultado aparecerá aquí</h2>
+          <p>Carga un archivo .eml o pega el contenido del correo y presiona Analizar riesgo. El panel se actualizará automáticamente.</p>
         </div>
       `;
     }
@@ -58,20 +62,20 @@ function renderResult() {
   const level = result.level.toLowerCase();
   const guidance = {
     alto: {
-      title: "No confies en este correo",
-      body: "No abras enlaces ni adjuntos. Reportalo al area de TI o elimina el mensaje si era una prueba.",
+      title: "No confíes en este correo",
+      body: "No abras enlaces ni adjuntos. Repórtalo al área de TI o elimina el mensaje si era una prueba.",
     },
     medio: {
-      title: "Revisalo con cuidado",
-      body: "Verifica el remitente por otro canal antes de responder, descargar archivos o iniciar sesion.",
+      title: "Revísalo con cuidado",
+      body: "Verifica el remitente por otro canal antes de responder, descargar archivos o iniciar sesión.",
     },
     bajo: {
       title: "Parece seguro",
-      body: "No se detectaron senales criticas, pero confirma siempre que el remitente y el contexto tengan sentido.",
+      body: "No se detectaron señales críticas, pero confirma siempre que el remitente y el contexto tengan sentido.",
     },
   }[level] || {
     title: "Resultado calculado",
-    body: "Revisa las senales tecnicas para tomar una decision.",
+    body: "Revisa las señales técnicas para tomar una decisión.",
   };
   const techniques = result.technique_scores.map((item) => `
     <article class="tech-card">
@@ -101,7 +105,16 @@ function renderResult() {
   ].map(([label, value]) => `<article class="summary-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></article>`).join("");
 
   const attachmentHtml = attachments.length
-    ? attachments.map((item) => `<li>${escapeHtml(item.filename)} <span>${escapeHtml(item.content_type)}, ${escapeHtml(item.size)} bytes</span></li>`).join("")
+    ? attachments.map((item) => {
+        const notes = (item.risk_notes || []).length ? item.risk_notes.join(" ") : "Sin señales internas.";
+        const flags = [
+          item.has_double_extension ? "doble extensión" : "",
+          item.macro_suspected ? "macros sospechosas" : "",
+          item.extension ? `extensión .${item.extension}` : "",
+        ].filter(Boolean).join(", ");
+        const hash = item.sha256 ? `<span>SHA-256: ${escapeHtml(item.sha256)}</span>` : "";
+        return `<li>${escapeHtml(item.filename)} <span>${escapeHtml(item.content_type)}, ${escapeHtml(item.size)} bytes${flags ? `, ${escapeHtml(flags)}` : ""}</span><span>${escapeHtml(notes)}</span>${hash}</li>`;
+      }).join("")
     : "<li>No se detectaron adjuntos.</li>";
 
   const matchHtml = matches.length
@@ -120,7 +133,7 @@ function renderResult() {
       <div>
         <p class="eyebrow">Resultado</p>
         <h2>${escapeHtml(result.decision)}</h2>
-        <p>${escapeHtml(result.level)} riesgo detectado con explicacion de tecnicas combinadas.</p>
+        <p>${escapeHtml(result.level)} riesgo detectado con explicación de técnicas combinadas.</p>
       </div>
       <div class="risk-orbit" style="--risk:${result.final_score}">
         <span>${escapeHtml(result.final_score)}%</span>
@@ -130,12 +143,13 @@ function renderResult() {
     <div class="friendly-verdict">
       <strong>${escapeHtml(guidance.title)}</strong>
       <p>${escapeHtml(guidance.body)}</p>
+      ${result.report_url ? `<a class="report-link" href="${escapeHtml(result.report_url)}" target="_blank" rel="noopener">Abrir reporte PDF</a>` : ""}
     </div>
     <div class="tech-grid">${techniques}</div>
     <div class="summary-grid">${summaryCards}</div>
     <div class="match-grid">${matchHtml}</div>
     <div class="reason-box">
-      <h3>Senales encontradas</h3>
+      <h3>Señales encontradas</h3>
       <ul>${reasons}</ul>
     </div>
     <div class="reason-box">
@@ -167,9 +181,29 @@ function renderIndicators() {
   `).join("");
 }
 
+function renderHistory() {
+  const list = document.querySelector("#history-list");
+  if (!list) return;
+  if (!historyRows.length) {
+    list.innerHTML = `<article class="history-card"><strong>Sin análisis guardados</strong><p>Cuando analices un correo, aparecerá aquí con su reporte PDF.</p></article>`;
+    return;
+  }
+  list.innerHTML = historyRows.slice(-8).reverse().map((item) => `
+    <article class="history-card">
+      <div>
+        <span>${escapeHtml(item.timestamp)}</span>
+        <strong>${escapeHtml(item.level)} - ${escapeHtml(item.final_score)}%</strong>
+      </div>
+      <p>${escapeHtml(item.subject || item.url || item.source_name || "Análisis sin asunto")}</p>
+      ${item.report_url ? `<a href="${escapeHtml(item.report_url)}" target="_blank" rel="noopener">PDF</a>` : ""}
+    </article>
+  `).join("");
+}
+
 renderMetrics();
 renderResult();
 renderIndicators();
+renderHistory();
 
 document.querySelectorAll(".analysis-form").forEach((form) => {
   form.addEventListener("submit", () => {
@@ -187,13 +221,13 @@ document.querySelectorAll(".upload-zone").forEach((zone) => {
 
   const status = document.createElement("div");
   status.className = "file-status";
-  status.textContent = "Ningun archivo seleccionado";
+  status.textContent = "Ningún archivo seleccionado";
   zone.appendChild(status);
 
   input.addEventListener("change", () => {
     const file = input.files && input.files[0];
     zone.classList.toggle("file-selected", Boolean(file));
-    status.textContent = file ? `Archivo listo: ${file.name}` : "Ningun archivo seleccionado";
+    status.textContent = file ? `Archivo listo: ${file.name}` : "Ningún archivo seleccionado";
   });
 
   ["dragenter", "dragover"].forEach((eventName) => {

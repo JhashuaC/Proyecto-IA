@@ -16,7 +16,7 @@
       </a>
       <div class="nav-pills" aria-label="Ejemplos">
         <a href="/sample/phishing">Phishing</a>
-        <a href="/sample/legit">Legitimo</a>
+        <a href="/sample/legit">Legítimo</a>
         <a href="/sample-eml/phishing-completo">Descargar .eml</a>
       </div>
     </nav>
@@ -27,14 +27,14 @@
         <h1>Detecta phishing con claridad.</h1>
         <p class="hero-text">
           Carga un archivo .eml o pega un correo. SentinelMail revisa enlaces,
-          cabeceras, adjuntos e indicadores y te muestra un veredicto facil de entender.
+          cabeceras, adjuntos e indicadores y te muestra un veredicto fácil de entender.
         </p>
         <div class="hero-actions">
           <a href="#analysis-title">Analizar correo</a>
           <a href="/sample-eml/phishing-completo">Bajar .eml de prueba</a>
         </div>
       </div>
-      <div class="hero-panel" aria-label="Resumen de analisis">
+      <div class="hero-panel" aria-label="Resumen de análisis">
         <div class="device-preview">
           <div class="preview-bar"></div>
           <div class="preview-row strong"></div>
@@ -49,7 +49,7 @@
     </header>
 
     <main class="workspace">
-      <section class="guide-strip" aria-label="Como usar la aplicacion">
+      <section class="guide-strip" aria-label="Cómo usar la aplicación">
         <article>
           <span>1</span>
           <strong>Carga o pega</strong>
@@ -58,12 +58,12 @@
         <article>
           <span>2</span>
           <strong>Analiza</strong>
-          <p>Presiona el boton y espera el nivel de riesgo.</p>
+          <p>Presiona el botón y espera el nivel de riesgo.</p>
         </article>
         <article>
           <span>3</span>
           <strong>Revisa la evidencia</strong>
-          <p>Lee las senales: cabeceras, adjuntos, enlaces e indicadores.</p>
+          <p>Lee las señales: cabeceras, adjuntos, enlaces e indicadores.</p>
         </article>
       </section>
 
@@ -71,16 +71,16 @@
         <div class="panel-heading">
           <p class="eyebrow">Paso principal</p>
           <h2 id="analysis-title">Analizar un correo</h2>
-          <p class="panel-help">La forma mas sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo completo o pega los datos manualmente.</p>
+          <p class="panel-help">La forma más sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo completo o pega los datos manualmente.</p>
         </div>
         <form method="post" action="/analyze#result-panel" class="analysis-form" enctype="multipart/form-data">
           <div class="upload-zone">
-            <label for="eml_file">Opcion recomendada: cargar archivo .eml</label>
+            <label for="eml_file">Opción recomendada: cargar archivo .eml</label>
             <input id="eml_file" name="eml_file" type="file" accept=".eml,message/rfc822">
-            <p>La app extrae automaticamente asunto, remitente, enlaces, adjuntos y cabeceras de autenticacion.</p>
+            <p>La app extrae automáticamente asunto, remitente, enlaces, adjuntos y cabeceras de autenticación.</p>
             <div class="mini-actions">
               <a href="/sample-eml/phishing-completo">Descargar .eml phishing completo</a>
-              <a href="/sample-eml/legitimo">Descargar .eml legitimo</a>
+              <a href="/sample-eml/legitimo">Descargar .eml legítimo</a>
             </div>
           </div>
 
@@ -93,12 +93,12 @@
             <input id="url" name="url" value="{{ url }}" placeholder="https://sitio.example/ruta" autocomplete="off">
 
             <label for="body">Contenido del mensaje</label>
-            <textarea id="body" name="body" placeholder="Pegue aqui el cuerpo del correo">{{ body }}</textarea>
+            <textarea id="body" name="body" placeholder="Pegue aquí el cuerpo del correo">{{ body }}</textarea>
           </details>
 
           <details class="manual-entry">
             <summary>Campos avanzados de cabecera</summary>
-            <p class="inline-help">Opcional. Estos campos ayudan a detectar suplantacion y fallos de autenticacion.</p>
+            <p class="inline-help">Opcional. Estos campos ayudan a detectar suplantación y fallos de autenticación.</p>
             <div class="field-grid">
               <div>
                 <label for="sender">From</label>
@@ -122,7 +122,7 @@
           <div class="actions">
             <button type="submit">Analizar riesgo</button>
             <a href="/sample/phishing">Probar ataque</a>
-            <a href="/sample/legit">Probar legitimo</a>
+            <a href="/sample/legit">Probar legítimo</a>
           </div>
         </form>
       </section>
@@ -132,19 +132,19 @@
       <aside class="insight-panel" aria-labelledby="metrics-title">
         <div class="panel-heading">
           <p class="eyebrow">Estado del modelo</p>
-          <h2 id="metrics-title">Resumen tecnico</h2>
-          <p class="panel-help">Estos datos son utiles para la defensa: muestran el entrenamiento y la validacion interna.</p>
+          <h2 id="metrics-title">Resumen técnico</h2>
+          <p class="panel-help">Estos datos son útiles para la defensa: muestran el entrenamiento y la validación interna.</p>
         </div>
         <div id="metrics-grid" class="metrics-grid"></div>
         <div class="loss-panel">
-          <span>Perdida de la red neuronal</span>
+          <span>Pérdida de la red neuronal</span>
           <div id="loss-line" class="loss-line" aria-hidden="true"></div>
         </div>
       </aside>
 
       <section class="indicator-panel" aria-labelledby="indicator-title">
         <div class="panel-heading">
-          <p class="eyebrow">Personalizacion</p>
+          <p class="eyebrow">Personalización</p>
           <h2 id="indicator-title">Indicadores configurables</h2>
           <p class="panel-help">Agrega palabras, dominios o patrones que quieras detectar en futuros correos.</p>
         </div>
@@ -157,11 +157,11 @@
                 <input id="indicator_name" name="indicator_name" placeholder="Dominio corporativo falso">
               </div>
               <div>
-                <label for="indicator_category">Categoria</label>
-                <input id="indicator_category" name="indicator_category" placeholder="Suplantacion">
+                <label for="indicator_category">Categoría</label>
+                <input id="indicator_category" name="indicator_category" placeholder="Suplantación">
               </div>
               <div>
-                <label for="indicator_pattern">Patron</label>
+                <label for="indicator_pattern">Patrón</label>
                 <input id="indicator_pattern" name="indicator_pattern" placeholder="empresa-login|verify-account">
               </div>
               <div>
@@ -178,13 +178,22 @@
         <div id="indicator-list" class="indicator-list"></div>
       </section>
 
+      <section class="history-panel" aria-labelledby="history-title">
+        <div class="panel-heading">
+          <p class="eyebrow">Evidencia</p>
+          <h2 id="history-title">Historial de análisis</h2>
+          <p class="panel-help">Cada análisis queda guardado localmente y puede abrirse como reporte PDF.</p>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
       <section class="architecture-strip" aria-label="Arquitectura limpia">
         <div>
           <span>Dominio</span>
-          <strong>Entidades y politicas</strong>
+          <strong>Entidades y políticas</strong>
         </div>
         <div>
-          <span>Aplicacion</span>
+          <span>Aplicación</span>
           <strong>Caso de uso</strong>
         </div>
         <div>
@@ -192,7 +201,7 @@
           <strong>IA manual y datos</strong>
         </div>
         <div>
-          <span>Presentacion</span>
+          <span>Presentación</span>
           <strong>Web local</strong>
         </div>
       </section>
@@ -203,6 +212,7 @@
     window.__METRICS__ = {{ metrics_json }};
     window.__RESULT__ = {{ result_json }};
     window.__INDICATORS__ = {{ indicators_json }};
+    window.__HISTORY__ = {{ history_json }};
   </script>
 </body>
 </html>

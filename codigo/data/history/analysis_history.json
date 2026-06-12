@@ -1,0 +1,132 @@
+[
+  {
+    "timestamp": "2026-06-11T22:47:20",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_224720_544592.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T22:47:41",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_224741_048819.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T22:50:32",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_225032_387028.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T22:56:40",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_225640_839612.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T22:59:21",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_225921_722538.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T22:59:42",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_225942_738864.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:00:00",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230000_378555.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:00:00",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230000_452573.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:00:00",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230000_608252.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:07:42",
+    "subject": " 🎓 ¡Bienvenido! Inscripción al curso Habilidades para el Éxito Profesional",
+    "url": "https://forms.office.com/r/AE3dkjW791",
+    "source_name": "🎓 ¡Bienvenido! Inscripción al curso Habilidades para el Éxito Profesional.eml",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 1.76,
+    "report_url": "/reports/reporte_20260611_230742_876167.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:08:04",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230804_748309.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:08:42",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230842_260309.pdf"
+  },
+  {
+    "timestamp": "2026-06-11T23:08:51",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "🎓 ¡Bienvenido! Inscripción al curso Habilidades para el Éxito Profesional.eml",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260611_230851_642220.pdf"
+  }
+]

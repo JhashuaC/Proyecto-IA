@@ -205,6 +205,7 @@ button:hover {
 .analysis-panel,
 .insight-panel,
 .indicator-panel,
+.history-panel,
 .result-panel,
 .architecture-strip {
   background: var(--panel);
@@ -218,6 +219,7 @@ button:hover {
 .analysis-panel:hover,
 .insight-panel:hover,
 .indicator-panel:hover,
+.history-panel:hover,
 .result-panel:hover,
 .guide-strip article:hover {
   border-color: rgba(10, 132, 255, .18);
@@ -371,6 +373,7 @@ button:hover {
 .analysis-panel,
 .insight-panel,
 .indicator-panel,
+.history-panel,
 .result-panel {
   padding: clamp(18px, 2.2vw, 28px);
 }
@@ -855,6 +858,10 @@ button:disabled {
   grid-column: 1 / -1;
 }
 
+.history-panel {
+  grid-column: 1 / -1;
+}
+
 .insight-panel {
   grid-column: 1 / -1;
 }
@@ -878,9 +885,51 @@ button:disabled {
   margin-top: 16px;
 }
 
+.history-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
 .indicator-chip {
   display: grid;
   gap: 10px;
+}
+
+.history-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, .68);
+  border: 1px solid rgba(37, 48, 66, .11);
+  border-radius: 18px;
+}
+
+.history-card span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.history-card p {
+  margin: 0;
+  color: #2f3c50;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.history-card a,
+.report-link {
+  justify-self: start;
+  min-height: 34px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  background: #111827;
+  border-radius: 999px;
 }
 
 .indicator-chip code {
@@ -1022,7 +1071,8 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .indicator-list {
+  .indicator-list,
+  .history-list {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -1083,6 +1133,7 @@ button:disabled {
   .analysis-panel,
   .insight-panel,
   .indicator-panel,
+  .history-panel,
   .result-panel,
   .guide-strip article {
     border-radius: 20px;
@@ -1094,6 +1145,7 @@ button:disabled {
   .match-grid,
   .field-grid,
   .indicator-list,
+  .history-list,
   .architecture-strip {
     grid-template-columns: 1fr;
   }

@@ -1,35 +1,44 @@
 PROYECTO FINAL IA - SENTINELMAIL AI
 
 Tema:
-Sistema inteligente para deteccion de phishing en correos electronicos y URLs.
+Sistema inteligente para detección de phishing en correos electrónicos y URLs.
 
 Arquitectura:
-El sistema esta organizado bajo Clean Architecture:
-- Dominio: entidades y politicas de clasificacion.
-- Aplicacion: caso de uso de analisis.
-- Infraestructura: dataset, extractor de caracteristicas y algoritmos de IA.
-- Presentacion: servidor web, plantilla, CSS y JavaScript.
+El sistema está organizado bajo Clean Architecture:
+- Dominio: entidades y políticas de clasificación.
+- Aplicación: caso de uso de análisis.
+- Infraestructura: datasets, extractor de características, algoritmos de IA, historial y reportes.
+- Presentación: servidor web, plantilla, CSS y JavaScript.
 
-Tecnicas de inteligencia artificial implementadas:
-1. Red neuronal artificial feedforward con retropropagacion manual.
+Técnicas de inteligencia artificial implementadas:
+1. Red neuronal artificial feedforward con retropropagación manual.
 2. Clasificador Naive Bayes multinomial manual.
-3. Sistema experto basado en reglas de ciberseguridad.
+3. Árbol de decisión manual basado en impureza Gini.
+4. Sistema experto basado en reglas de ciberseguridad.
+
+Mejoras incluidas:
+- Carga automática de datasets externos reales en CSV, JSON, JSONL o EML desde codigo/data/datasets.
+- Separación entre entrenamiento y prueba para reportar exactitud de validación.
+- Historial local de análisis en codigo/data/history/analysis_history.json.
+- Exportación de reportes PDF en codigo/data/reports.
+- Análisis interno de adjuntos: SHA-256, extensiones peligrosas, doble extensión y sospecha de macros.
+- Textos visibles corregidos con tildes y ñ.
 
 Estructura:
-- codigo/app.py: aplicacion web local.
-- codigo/src/phishing_detector/domain/: entidades, puertos y politicas.
+- codigo/app.py: aplicación web local.
+- codigo/src/phishing_detector/domain/: entidades, puertos y políticas.
 - codigo/src/phishing_detector/application/: casos de uso.
-- codigo/src/phishing_detector/infrastructure/: IA manual, datos y bootstrap.
+- codigo/src/phishing_detector/infrastructure/: IA manual, datos, parser, historial y reportes.
 - codigo/src/phishing_detector/presentation/web/: interfaz web profesional.
+- codigo/data/datasets/: ubicación para datasets públicos reales.
 - codigo/tests/: pruebas de humo.
-- documentacion/: espacio para el informe final en PDF.
-- presentacion/: espacio para las diapositivas de defensa.
+- documentacion/: espacio para el informe final.
 
 Requisitos:
 - Python 3.10 o superior.
 - No requiere instalar bibliotecas externas.
 
-Ejecucion:
+Ejecución:
 1. Abrir una terminal en la carpeta del proyecto.
 2. Ejecutar:
    python codigo/app.py
@@ -46,18 +55,21 @@ Uso:
 3. Opcionalmente complete From, Reply-To, Return-Path y Authentication-Results.
 4. Pegue el contenido del mensaje o cargue un archivo .eml.
 5. Presione "Analizar riesgo".
-6. Tambien puede agregar indicadores propios con nombre, categoria, patron regex y peso.
-7. El sistema mostrara:
-   - decision final,
+6. También puede agregar indicadores propios con nombre, categoría, patrón regex y peso.
+7. El sistema mostrará:
+   - decisión final,
    - porcentaje de riesgo,
    - salida de la red neuronal,
    - salida de Naive Bayes,
+   - salida del árbol de decisión,
    - puntaje del sistema experto,
    - reglas activadas,
    - resumen de cabeceras,
    - cantidad de enlaces,
    - adjuntos detectados,
-   - indicadores coincidentes.
+   - indicadores coincidentes,
+   - enlace a reporte PDF,
+   - historial de análisis.
 
 Ejemplos incluidos:
 - http://127.0.0.1:8000/sample/phishing
@@ -68,9 +80,8 @@ Ejemplos incluidos:
 - codigo/data/samples/legit_demo.eml
 
 Endpoint JSON:
-Tambien se puede consultar con POST a:
+También se puede consultar con POST a:
 http://127.0.0.1:8000/api/analyze
 
-Nota academica:
-El sistema usa datos simulados realistas para fines educativos. No debe utilizarse como
-herramienta unica de seguridad en entornos reales.
+Nota académica:
+El sistema puede cargar datasets reales externos, pero no incluye correos maliciosos reales dentro del repositorio para evitar distribuir enlaces o adjuntos peligrosos. Si no hay datasets externos, utiliza datos simulados realistas para fines educativos. No debe utilizarse como herramienta única de seguridad en entornos reales.

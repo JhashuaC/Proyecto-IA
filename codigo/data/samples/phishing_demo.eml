@@ -11,7 +11,7 @@ Content-Type: text/html; charset="utf-8"
 
 <html>
   <body>
-    <p>Urgente: verifique usuario, contrasena y token ahora para evitar la suspension.</p>
+    <p>Urgente: verifique usuario, contraseña y token ahora para evitar la suspensión.</p>
     <a href="http://198.51.100.20/login.exe">https://banco.example/seguridad</a>
   </body>
 </html>
@@ -21,16 +21,3 @@ Content-Disposition: attachment; filename="factura.exe"
 
 MZfake
 --sentinel--
-
-*** Add File: codigo/data/samples/legit_demo.eml
-From: Soporte Campus <soporte@campus.example>
-Reply-To: soporte@campus.example
-Return-Path: <bounce@campus.example>
-Subject: Aviso de mantenimiento programado
-Authentication-Results: mx.example; spf=pass smtp.mailfrom=campus.example; dkim=pass; dmarc=pass
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-
-El aula virtual tendra una ventana de mantenimiento programada el sabado de 1 a 3 a.m.
-Puede consultar el estado del servicio en https://campus.example/status.
-

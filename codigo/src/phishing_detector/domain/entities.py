@@ -8,6 +8,11 @@ class AttachmentInfo:
     filename: str
     content_type: str
     size: int = 0
+    sha256: str = ""
+    extension: str = ""
+    has_double_extension: bool = False
+    macro_suspected: bool = False
+    risk_notes: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

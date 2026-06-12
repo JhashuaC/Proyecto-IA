@@ -7,11 +7,11 @@ from phishing_detector.domain.entities import SecurityIndicator
 
 
 DEFAULT_INDICATORS = [
-    SecurityIndicator("Solicitud de credenciales", r"\b(usuario|clave|contrasena|password|token|login)\b", 12, "Credenciales"),
-    SecurityIndicator("Urgencia o amenaza", r"\b(urgente|inmediatamente|suspendida|bloqueada|vence|expira|ahora)\b", 10, "Ingenieria social"),
+    SecurityIndicator("Solicitud de credenciales", r"\b(usuario|clave|contrasena|contraseña|password|token|login)\b", 12, "Credenciales"),
+    SecurityIndicator("Urgencia o amenaza", r"\b(urgente|inmediatamente|suspendida|bloqueada|vence|expira|ahora)\b", 10, "Ingeniería social"),
     SecurityIndicator("Datos financieros", r"\b(tarjeta|cvv|cuenta bancaria|transferencia|reembolso|premio)\b", 10, "Financiero"),
     SecurityIndicator("Adjunto ejecutable", r"\.(exe|scr|bat|cmd|js|vbs|msi|iso|lnk)\b", 16, "Adjuntos"),
-    SecurityIndicator("Marca suplantada comun", r"\b(paypal|microsoft|apple|google|banco|netflix|dhl|amazon)\b", 8, "Suplantacion"),
+    SecurityIndicator("Marca suplantada común", r"\b(paypal|microsoft|apple|google|banco|netflix|dhl|amazon)\b", 8, "Suplantación"),
 ]
 
 

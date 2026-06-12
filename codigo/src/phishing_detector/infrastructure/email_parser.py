@@ -4,6 +4,8 @@ from email import policy
 from email.parser import BytesParser
 from email.utils import parseaddr
 from html.parser import HTMLParser
+from pathlib import Path
+import hashlib
 import re
 
 from phishing_detector.domain.entities import AttachmentInfo, EmailAnalysisRequest
@@ -36,6 +38,46 @@ def _payload_to_text(part):
         return payload.decode(charset, errors="replace")
 
 
+def _analyze_attachment(filename, content_type, payload):
+    name = filename or "adjunto_sin_nombre"
+    suffixes = [suffix.lower().lstrip(".") for suffix in Path(name).suffixes]
+    extension = suffixes[-1] if suffixes else ""
+    risky_extensions = {"exe", "scr", "bat", "cmd", "js", "vbs", "msi", "iso", "lnk", "zip", "rar"}
+    document_extensions = {"doc", "docm", "xls", "xlsm", "ppt", "pptm", "rtf"}
+    executable_suffixes = risky_extensions | {"com", "ps1", "jar"}
+    notes = []
+
+    has_double_extension = len(suffixes) >= 2 and suffixes[-1] in executable_suffixes
+    macro_suspected = extension in {"docm", "xlsm", "pptm"} or (
+        extension in document_extensions and (
+            b"vbaProject.bin" in payload
+            or b"AutoOpen" in payload
+            or b"Document_Open" in payload
+            or b"Workbook_Open" in payload
+        )
+    )
+
+    if extension in risky_extensions:
+        notes.append("Extensión potencialmente riesgosa.")
+    if has_double_extension:
+        notes.append("Nombre con doble extensión, técnica común para ocultar ejecutables.")
+    if macro_suspected:
+        notes.append("Posible documento con macros o automatización embebida.")
+    if payload.startswith(b"MZ"):
+        notes.append("El contenido inicia como ejecutable de Windows.")
+
+    return AttachmentInfo(
+        filename=name,
+        content_type=content_type,
+        size=len(payload),
+        sha256=hashlib.sha256(payload).hexdigest() if payload else "",
+        extension=extension,
+        has_double_extension=has_double_extension,
+        macro_suspected=macro_suspected,
+        risk_notes=notes,
+    )
+
+
 def parse_eml(raw_bytes, source_name="correo.eml"):
     message = BytesParser(policy=policy.default).parsebytes(raw_bytes)
     plain_parts = []
@@ -48,11 +90,7 @@ def parse_eml(raw_bytes, source_name="correo.eml"):
         filename = part.get_filename()
         if disposition == "attachment" or filename:
             payload = part.get_payload(decode=True) or b""
-            attachments.append(AttachmentInfo(
-                filename=filename or "adjunto_sin_nombre",
-                content_type=content_type,
-                size=len(payload),
-            ))
+            attachments.append(_analyze_attachment(filename, content_type, payload))
             continue
         if content_type == "text/plain":
             plain_parts.append(_payload_to_text(part))

