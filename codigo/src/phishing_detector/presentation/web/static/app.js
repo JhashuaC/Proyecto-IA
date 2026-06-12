@@ -12,6 +12,106 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function decodeMimeWords(value) {
+  return String(value || "").replace(/=\?([^?]+)\?([bqBQ])\?([^?]+)\?=/g, (_, charset, encoding, payload) => {
+    try {
+      if (encoding.toLowerCase() === "b") {
+        const binary = atob(payload);
+        const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+        return new TextDecoder(charset || "utf-8").decode(bytes);
+      }
+      const qp = payload.replaceAll("_", " ").replace(/=([0-9A-F]{2})/gi, "%$1");
+      return decodeURIComponent(qp);
+    } catch {
+      return payload;
+    }
+  });
+}
+
+function decodeQuotedPrintable(value) {
+  const prepared = String(value || "")
+    .replace(/=\r?\n/g, "")
+    .replace(/=([0-9A-F]{2})/gi, "%$1");
+  try {
+    return decodeURIComponent(prepared);
+  } catch {
+    return String(value || "").replace(/=\r?\n/g, "");
+  }
+}
+
+function parseEmlPreview(raw) {
+  const normalized = raw.replace(/\r\n/g, "\n");
+  const splitAt = normalized.search(/\n\n/);
+  const headerText = splitAt >= 0 ? normalized.slice(0, splitAt) : normalized;
+  const bodyText = splitAt >= 0 ? normalized.slice(splitAt + 2) : "";
+  const headers = {};
+  let current = "";
+
+  headerText.split("\n").forEach((line) => {
+    if (/^\s/.test(line) && current) {
+      headers[current] = `${headers[current]} ${line.trim()}`.trim();
+      return;
+    }
+    const index = line.indexOf(":");
+    if (index > 0) {
+      current = line.slice(0, index).trim().toLowerCase();
+      headers[current] = line.slice(index + 1).trim();
+    }
+  });
+
+  const cleanBody = decodeQuotedPrintable(bodyText)
+    .replace(/^Content-[^\n]+$/gim, "")
+    .replace(/^--[^\n]+$/gim, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const links = Array.from(new Set((raw.match(/https?:\/\/[^\s<>"')]+/g) || []).map((link) => link.replace(/[.,);]+$/, ""))));
+  const emailAddress = (value) => {
+    const match = String(value || "").match(/<([^>]+)>/);
+    return match ? match[1] : String(value || "").trim();
+  };
+
+  return {
+    subject: decodeMimeWords(headers.subject || ""),
+    sender: emailAddress(decodeMimeWords(headers.from || "")),
+    reply_to: emailAddress(decodeMimeWords(headers["reply-to"] || "")),
+    return_path: emailAddress(decodeMimeWords(headers["return-path"] || "")),
+    authentication_results: decodeMimeWords(headers["authentication-results"] || ""),
+    url: links[0] || "",
+    body: cleanBody,
+  };
+}
+
+function setField(id, value) {
+  const field = document.querySelector(`#${id}`);
+  if (field) field.value = value || "";
+}
+
+function fillFieldsFromEml(file, status) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    const data = parseEmlPreview(String(reader.result || ""));
+    setField("subject", data.subject);
+    setField("url", data.url);
+    setField("body", data.body);
+    setField("sender", data.sender);
+    setField("reply_to", data.reply_to);
+    setField("return_path", data.return_path);
+    setField("authentication_results", data.authentication_results);
+    if (status) {
+      status.textContent = `Archivo listo y campos actualizados: ${file.name}`;
+    }
+  });
+  reader.addEventListener("error", () => {
+    if (status) {
+      status.textContent = `Archivo seleccionado, pero no se pudo previsualizar: ${file.name}`;
+    }
+  });
+  reader.readAsText(file, "utf-8");
+}
+
 const metricLabels = [
   ["train_total", "Entrenamiento"],
   ["test_total", "Prueba"],
@@ -228,6 +328,9 @@ document.querySelectorAll(".upload-zone").forEach((zone) => {
     const file = input.files && input.files[0];
     zone.classList.toggle("file-selected", Boolean(file));
     status.textContent = file ? `Archivo listo: ${file.name}` : "Ningún archivo seleccionado";
+    if (file) {
+      fillFieldsFromEml(file, status);
+    }
   });
 
   ["dragenter", "dragover"].forEach((eventName) => {

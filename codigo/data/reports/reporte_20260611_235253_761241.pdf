@@ -12,35 +12,28 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 1405 >>
+<< /Length 1020 >>
 stream
 BT
 /F1 10 Tf
 50 790 Td
 14 TL
 (SentinelMail AI - Reporte de analisis) Tj
-T* (Fecha: 2026-06-11 23:08:51) Tj
-T* (Decision: Probable phishing) Tj
-T* (Nivel: ALTO) Tj
-T* (Riesgo final: 98.02%) Tj
-T* (Asunto: Cuenta bloqueada urgente) Tj
-T* (URL: http://seguridad-banco.example.verify-login.ru/acceso) Tj
+T* (Fecha: 2026-06-11 23:52:53) Tj
+T* (Decision: Probablemente legitimo) Tj
+T* (Nivel: BAJO) Tj
+T* (Riesgo final: 1.76%) Tj
+T* (Asunto:  ? ?Bienvenido! Inscripcion al curso Habilidades para el Exito Profesional) Tj
+T* (URL: https://forms.office.com/r/AE3dkjW791) Tj
 T* (Origen: ? ?Bienvenido! Inscripcion al curso Habilidades para el Exito Profesional.eml) Tj
 T* () Tj
 T* (Tecnicas:) Tj
-T* (- Red neuronal: 100.0%) Tj
-T* (- Naive Bayes: 100.0%) Tj
-T* (- Arbol de decision: 100.0%) Tj
-T* (- Sistema experto: 91%) Tj
+T* (- Red neuronal: 0.01%) Tj
+T* (- Naive Bayes: 0.0%) Tj
+T* (- Arbol de decision: 0.0%) Tj
+T* (- Sistema experto: 8%) Tj
 T* () Tj
 T* (Senales encontradas:) Tj
-T* (- La URL no usa HTTPS.) Tj
-T* (- El dominio usa una terminacion comun en campanas sospechosas.) Tj
-T* (- El dominio contiene muchos subdominios o guiones.) Tj
-T* (- El mensaje presiona con urgencia o vencimiento.) Tj
-T* (- Solicita credenciales, inicio de sesion o token.) Tj
-T* (- Indicador 'Solicitud de credenciales' coincide con el correo.) Tj
-T* (- Indicador 'Urgencia o amenaza' coincide con el correo.) Tj
 T* (- Indicador 'Marca suplantada comun' coincide con el correo.) Tj
 T* () Tj
 T* (Adjuntos:) Tj
@@ -61,5 +54,5 @@ xref
 0000000311 00000 n 
 trailer << /Size 6 /Root 1 0 R >>
 startxref
-1768
+1383
 %%EOF

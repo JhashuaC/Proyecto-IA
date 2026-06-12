@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SentinelMail AI | Detector de phishing</title>
+  <title>Sentinel-Mail AI | Detector de phishing</title>
   <link rel="stylesheet" href="/static/styles.css">
   <script defer src="/static/app.js"></script>
 </head>
+
 <body>
   <div class="page-shell">
     <nav class="topbar" aria-label="Principal">
@@ -71,7 +73,8 @@
         <div class="panel-heading">
           <p class="eyebrow">Paso principal</p>
           <h2 id="analysis-title">Analizar un correo</h2>
-          <p class="panel-help">La forma más sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo completo o pega los datos manualmente.</p>
+          <p class="panel-help">La forma más sencilla es cargar un archivo .eml. Si no tienes uno, usa el ejemplo
+            completo o pega los datos manualmente.</p>
         </div>
         <form method="post" action="/analyze#result-panel" class="analysis-form" enctype="multipart/form-data">
           <div class="upload-zone">
@@ -87,7 +90,8 @@
           <details class="manual-entry" open>
             <summary>Ingresar datos manualmente</summary>
             <label for="subject">Asunto</label>
-            <input id="subject" name="subject" value="{{ subject }}" placeholder="Cuenta bloqueada urgente" autocomplete="off">
+            <input id="subject" name="subject" value="{{ subject }}" placeholder="Cuenta bloqueada urgente"
+              autocomplete="off">
 
             <label for="url">URL principal</label>
             <input id="url" name="url" value="{{ url }}" placeholder="https://sitio.example/ruta" autocomplete="off">
@@ -102,19 +106,23 @@
             <div class="field-grid">
               <div>
                 <label for="sender">From</label>
-                <input id="sender" name="sender" value="{{ sender }}" placeholder="soporte@empresa.example" autocomplete="off">
+                <input id="sender" name="sender" value="{{ sender }}" placeholder="soporte@empresa.example"
+                  autocomplete="off">
               </div>
               <div>
                 <label for="reply_to">Reply-To</label>
-                <input id="reply_to" name="reply_to" value="{{ reply_to }}" placeholder="responder@dominio.example" autocomplete="off">
+                <input id="reply_to" name="reply_to" value="{{ reply_to }}" placeholder="responder@dominio.example"
+                  autocomplete="off">
               </div>
               <div>
                 <label for="return_path">Return-Path</label>
-                <input id="return_path" name="return_path" value="{{ return_path }}" placeholder="bounce@dominio.example" autocomplete="off">
+                <input id="return_path" name="return_path" value="{{ return_path }}"
+                  placeholder="bounce@dominio.example" autocomplete="off">
               </div>
               <div>
                 <label for="authentication_results">Authentication-Results</label>
-                <input id="authentication_results" name="authentication_results" value="{{ authentication_results }}" placeholder="spf=pass dkim=pass dmarc=pass" autocomplete="off">
+                <input id="authentication_results" name="authentication_results" value="{{ authentication_results }}"
+                  placeholder="spf=pass dkim=pass dmarc=pass" autocomplete="off">
               </div>
             </div>
           </details>
@@ -133,7 +141,8 @@
         <div class="panel-heading">
           <p class="eyebrow">Estado del modelo</p>
           <h2 id="metrics-title">Resumen técnico</h2>
-          <p class="panel-help">Estos datos son útiles para la defensa: muestran el entrenamiento y la validación interna.</p>
+          <p class="panel-help">Estos datos muestran el entrenamiento y la validación
+            interna.</p>
         </div>
         <div id="metrics-grid" class="metrics-grid"></div>
         <div class="loss-panel">
@@ -169,7 +178,8 @@
                 <input id="indicator_weight" name="indicator_weight" type="number" min="1" max="30" value="8">
               </div>
             </div>
-            <p class="inline-help">Ejemplo simple: escribe <strong>verify-login</strong> para detectar URLs que contengan ese texto.</p>
+            <p class="inline-help">Ejemplo simple: escribe <strong>verify-login</strong> para detectar URLs que
+              contengan ese texto.</p>
             <div class="actions">
               <button type="submit">Guardar indicador</button>
             </div>
@@ -206,6 +216,14 @@
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <span >Desarrollado por Marco Ugalde Cortés & Jhashua Cantón Ruiz</span>
+        <span class="footer-separator">|</span>
+        <span>© 2026 Todos los derechos reservados</span>
+      </div>
+    </footer>
   </div>
 
   <script>
@@ -215,4 +233,5 @@
     window.__HISTORY__ = {{ history_json }};
   </script>
 </body>
+
 </html>

@@ -216,13 +216,13 @@ class WebHandler(BaseHTTPRequestHandler):
                 raw = upload.file.read()
                 request = parse_eml(raw, upload.filename)
                 return EmailAnalysisRequest(
-                    subject=self._field(form, "subject") or request.subject,
-                    url=self._field(form, "url") or request.url,
-                    body=self._field(form, "body") or request.body,
-                    sender=self._field(form, "sender") or request.sender,
-                    reply_to=self._field(form, "reply_to") or request.reply_to,
-                    return_path=self._field(form, "return_path") or request.return_path,
-                    authentication_results=self._field(form, "authentication_results") or request.authentication_results,
+                    subject=request.subject or self._field(form, "subject"),
+                    url=request.url or self._field(form, "url"),
+                    body=request.body or self._field(form, "body"),
+                    sender=request.sender or self._field(form, "sender"),
+                    reply_to=request.reply_to or self._field(form, "reply_to"),
+                    return_path=request.return_path or self._field(form, "return_path"),
+                    authentication_results=request.authentication_results or self._field(form, "authentication_results"),
                     headers=request.headers,
                     links=request.links,
                     attachments=request.attachments,
