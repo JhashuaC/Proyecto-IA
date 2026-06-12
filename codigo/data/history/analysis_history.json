@@ -348,5 +348,15 @@
     "level": "MEDIO",
     "final_score": 65.59,
     "report_url": "/reports/reporte_20260611_235848_272311.pdf"
+  },
+  {
+    "timestamp": "2026-06-12T00:28:33",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260612_002833_637381.pdf"
   }
 ]
