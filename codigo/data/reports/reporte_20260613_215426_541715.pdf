@@ -1,0 +1,62 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1068 >>
+stream
+BT
+/F1 10 Tf
+50 790 Td
+14 TL
+(SentinelMail AI - Reporte de analisis) Tj
+T* (Fecha: 2026-06-13 21:54:26) Tj
+T* (Decision: Probable phishing) Tj
+T* (Nivel: ALTO) Tj
+T* (Riesgo final: 98.02%) Tj
+T* (Asunto: Cuenta bloqueada urgente) Tj
+T* (URL: http://seguridad-banco.example.verify-login.ru/acceso) Tj
+T* (Origen: manual) Tj
+T* () Tj
+T* (Tecnicas:) Tj
+T* (- Red neuronal: 100.0%) Tj
+T* (- Naive Bayes: 100.0%) Tj
+T* (- Arbol de decision: 100.0%) Tj
+T* (- Sistema experto: 91%) Tj
+T* () Tj
+T* (Senales encontradas:) Tj
+T* (- La URL no usa HTTPS.) Tj
+T* (- El dominio usa una terminacion comun en campanas sospechosas.) Tj
+T* (- El dominio contiene muchos subdominios o guiones.) Tj
+T* (- El mensaje presiona con urgencia o vencimiento.) Tj
+T* (- Solicita credenciales, inicio de sesion o token.) Tj
+T* (- Indicador 'Solicitud de credenciales' coincide con el correo.) Tj
+T* (- Indicador 'Urgencia o amenaza' coincide con el correo.) Tj
+T* (- Indicador 'Marca suplantada comun' coincide con el correo.) Tj
+T* () Tj
+T* (Adjuntos:) Tj
+T* (- No se detectaron adjuntos.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1431
+%%EOF

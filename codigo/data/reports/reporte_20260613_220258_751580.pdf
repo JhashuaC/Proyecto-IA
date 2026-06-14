@@ -1,0 +1,59 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 954 >>
+stream
+BT
+/F1 10 Tf
+50 790 Td
+14 TL
+(SentinelMail AI - Reporte de analisis) Tj
+T* (Fecha: 2026-06-13 22:02:58) Tj
+T* (Decision: Probablemente legitimo) Tj
+T* (Nivel: BAJO) Tj
+T* (Riesgo final: 8.37%) Tj
+T* (Asunto: Opus 4.7 is now available in Devin and Windsurf at 50% off) Tj
+T* (URL:) Tj
+T* (  https://edd2q.r.a.d.sendibm1.com/mk/mr/sh/28xHBT2OOm5aR51O4XCT3eHW1Al1GgdgtM/DeP2LItS4OIm) Tj
+T* (Origen: Opus 4.7 is now available in Devin and Windsurf at 50% off.eml) Tj
+T* () Tj
+T* (Tecnicas:) Tj
+T* (- Red neuronal: 0.02%) Tj
+T* (- Naive Bayes: 0.0%) Tj
+T* (- Arbol de decision: 0.0%) Tj
+T* (- Sistema experto: 38%) Tj
+T* () Tj
+T* (Senales encontradas:) Tj
+T* (- El dominio contiene muchos subdominios o guiones.) Tj
+T* (- El correo contiene muchos enlaces.) Tj
+T* (- El Return-Path no coincide con el remitente visible.) Tj
+T* (- Indicador 'Marca suplantada comun' coincide con el correo.) Tj
+T* () Tj
+T* (Adjuntos:) Tj
+T* (- No se detectaron adjuntos.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1316
+%%EOF

@@ -358,5 +358,65 @@
     "level": "ALTO",
     "final_score": 98.02,
     "report_url": "/reports/reporte_20260612_002833_637381.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T21:54:21",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260613_215421_523833.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T21:54:22",
+    "subject": "Aviso de mantenimiento",
+    "url": "https://hosting.example/status",
+    "source_name": "manual",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 0.0,
+    "report_url": "/reports/reporte_20260613_215422_572424.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T21:54:26",
+    "subject": "Cuenta bloqueada urgente",
+    "url": "http://seguridad-banco.example.verify-login.ru/acceso",
+    "source_name": "manual",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 98.02,
+    "report_url": "/reports/reporte_20260613_215426_541715.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T21:54:53",
+    "subject": "SINPEMOVIL - Notificación de transacción realizada",
+    "url": "mailto:CentroAsistenciaBCR@bancobcr.com",
+    "source_name": "SINPEMOVIL - Notificación de transacción realizada.eml",
+    "decision": "Sospechoso",
+    "level": "MEDIO",
+    "final_score": 61.23,
+    "report_url": "/reports/reporte_20260613_215453_444684.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T21:56:00",
+    "subject": " 🎓 ¡Bienvenido! Inscripción al curso Habilidades para el Éxito Profesional",
+    "url": "https://forms.office.com/r/AE3dkjW791",
+    "source_name": "🎓 ¡Bienvenido! Inscripción al curso Habilidades para el Éxito Profesional.eml",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 1.76,
+    "report_url": "/reports/reporte_20260613_215600_610185.pdf"
+  },
+  {
+    "timestamp": "2026-06-13T22:02:58",
+    "subject": "Opus 4.7 is now available in Devin and Windsurf at 50% off",
+    "url": "https://edd2q.r.a.d.sendibm1.com/mk/mr/sh/28xHBT2OOm5aR51O4XCT3eHW1Al1GgdgtM/DeP2LItS4OIm",
+    "source_name": "Opus 4.7 is now available in Devin and Windsurf at 50% off.eml",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 8.37,
+    "report_url": "/reports/reporte_20260613_220258_751580.pdf"
   }
 ]

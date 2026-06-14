@@ -1,0 +1,58 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1020 >>
+stream
+BT
+/F1 10 Tf
+50 790 Td
+14 TL
+(SentinelMail AI - Reporte de analisis) Tj
+T* (Fecha: 2026-06-13 21:56:00) Tj
+T* (Decision: Probablemente legitimo) Tj
+T* (Nivel: BAJO) Tj
+T* (Riesgo final: 1.76%) Tj
+T* (Asunto:  ? ?Bienvenido! Inscripcion al curso Habilidades para el Exito Profesional) Tj
+T* (URL: https://forms.office.com/r/AE3dkjW791) Tj
+T* (Origen: ? ?Bienvenido! Inscripcion al curso Habilidades para el Exito Profesional.eml) Tj
+T* () Tj
+T* (Tecnicas:) Tj
+T* (- Red neuronal: 0.01%) Tj
+T* (- Naive Bayes: 0.0%) Tj
+T* (- Arbol de decision: 0.0%) Tj
+T* (- Sistema experto: 8%) Tj
+T* () Tj
+T* (Senales encontradas:) Tj
+T* (- Indicador 'Marca suplantada comun' coincide con el correo.) Tj
+T* () Tj
+T* (Adjuntos:) Tj
+T* (- Outlook-aig1ayru.png \(image/png\): Sin senales internas) Tj
+T* (  SHA-256: 9aeaf8ef349f2d8c0d7c0ee0c6239325cb093cf5da8e8509b697268280ecff93) Tj
+T* (- Outlook-kbfkzai5.jpg \(image/jpeg\): Sin senales internas) Tj
+T* (  SHA-256: cf69d5a64989089a4707cce0d7aa688e57cacf1284f8b07c2c338b4433fdd6d3) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1383
+%%EOF
