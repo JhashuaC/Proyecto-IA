@@ -10,7 +10,7 @@ class RiskScoringPolicy:
         self.tree_weight = tree_weight
         self.expert_weight = expert_weight
 
-    def classify(self, neural_score, bayes_score, tree_score, expert_score, reasons, indicator_matches, email_summary, features, metrics):
+    def classify(self, neural_score, bayes_score, tree_score, expert_score, reasons, indicator_matches, email_summary, features, metrics, explanations=None):
         final_score = (
             self.neural_weight * neural_score
             + self.bayes_weight * bayes_score
@@ -42,4 +42,5 @@ class RiskScoringPolicy:
             email_summary=email_summary,
             features=[round(value, 3) for value in features],
             metrics=metrics,
+            explanations=explanations or {},
         )

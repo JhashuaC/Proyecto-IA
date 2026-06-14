@@ -33,6 +33,53 @@ class ManualNeuralNetwork:
     def predict_probability(self, x):
         return self._forward(x)[1]
 
+    def explain(self, x, feature_names=None):
+        feature_names = feature_names or []
+        hidden_raw = [
+            sum(weight * value for weight, value in zip(weights, x)) + bias
+            for weights, bias in zip(self.w1, self.b1)
+        ]
+        hidden = [sigmoid(value) for value in hidden_raw]
+        output_raw = sum(weight * value for weight, value in zip(self.w2, hidden)) + self.b2
+        output = sigmoid(output_raw)
+        inputs = [
+            {
+                "index": index,
+                "name": feature_names[index] if index < len(feature_names) else f"Característica {index}",
+                "value": round(value, 4),
+            }
+            for index, value in enumerate(x)
+        ]
+        neurons = [
+            {
+                "index": index,
+                "weighted_sum": round(hidden_raw[index], 5),
+                "activation": round(hidden[index], 5),
+                "activation_percent": round(hidden[index] * 100, 2),
+                "outgoing_weight": round(self.w2[index], 5),
+                "contribution_to_output": round(hidden[index] * self.w2[index], 5),
+            }
+            for index in range(len(hidden))
+        ]
+        top_inputs = sorted(inputs, key=lambda item: item["value"], reverse=True)[:6]
+        return {
+            "activation_function": "sigmoid(x) = 1 / (1 + e^-x)",
+            "inputs": inputs,
+            "top_inputs": top_inputs,
+            "layers": [
+                {"name": "Entrada", "count": len(inputs)},
+                {"name": "Capa oculta", "count": len(hidden)},
+                {"name": "Salida", "count": 1},
+            ],
+            "hidden_neurons": neurons,
+            "output": {
+                "weighted_sum": round(output_raw, 5),
+                "probability_phishing": round(output * 100, 2),
+                "probability_safe": round((1 - output) * 100, 2),
+                "predicted_class": "Phishing" if output >= 0.5 else "Seguro",
+            },
+        }
+
     def train(self, rows, epochs=900):
         for epoch in range(epochs):
             total_loss = 0.0

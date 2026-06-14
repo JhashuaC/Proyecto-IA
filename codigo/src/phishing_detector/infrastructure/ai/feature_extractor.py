@@ -19,6 +19,32 @@ MONEY_WORDS = {"tarjeta", "banco", "bancaria", "pago", "reembolso", "premio", "t
 SUSPICIOUS_TLDS = {"top", "biz", "ru", "info", "co"}
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "goo.gl", "tiny.example"}
 
+FEATURE_NAMES = [
+    "URL usa HTTPS",
+    "Longitud de URL",
+    "Cantidad de puntos en URL",
+    "Cantidad de guiones en URL",
+    "Dominio es dirección IP",
+    "TLD sospechoso",
+    "URL contiene @",
+    "Dígitos en URL",
+    "Cantidad de enlaces",
+    "Palabras de urgencia",
+    "Palabras de credenciales",
+    "Palabras financieras",
+    "Acortador de URL",
+    "Formulario HTML",
+    "Extensión riesgosa",
+    "Densidad de palabras sospechosas",
+    "Cantidad de adjuntos",
+    "Reply-To distinto",
+    "Return-Path distinto",
+    "Fallo SPF/DKIM/DMARC",
+    "Enlaces extraídos del EML",
+    "Dominio punycode",
+    "Señales internas de adjuntos",
+]
+
 
 class LinkParser(HTMLParser):
     def __init__(self):
@@ -59,6 +85,8 @@ def safe_ratio(value, divisor, cap=1.0):
 
 
 class SecurityFeatureExtractor:
+    feature_names = FEATURE_NAMES
+
     def extract(self, request: EmailAnalysisRequest):
         text = f"{request.subject} {request.body} {request.sender} {request.reply_to} {request.authentication_results}"
         found_url = request.url or extract_url(text)
@@ -105,3 +133,9 @@ class SecurityFeatureExtractor:
     def text(self, request: EmailAnalysisRequest):
         attachment_names = " ".join(item.filename for item in request.attachments)
         return " ".join(tokenize(f"{request.subject} {request.body} {request.url} {request.sender} {request.reply_to} {attachment_names}"))
+
+    def describe(self, features):
+        return [
+            {"index": index, "name": name, "value": round(features[index], 4)}
+            for index, name in enumerate(self.feature_names[:len(features)])
+        ]

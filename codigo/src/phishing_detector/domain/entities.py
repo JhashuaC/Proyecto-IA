@@ -57,6 +57,7 @@ class AnalysisResult:
     email_summary: dict = field(default_factory=dict)
     features: list[float] = field(default_factory=list)
     metrics: dict = field(default_factory=dict)
+    explanations: dict = field(default_factory=dict)
 
     @property
     def is_risky(self):

@@ -266,6 +266,178 @@ function renderResult() {
   }
 }
 
+function renderTreeNode(node) {
+  if (!node) return "";
+  const visited = node.visited ? " visited" : " muted";
+  if (node.leaf) {
+    return `<li class="tree-node${visited}"><details open><summary><strong>${escapeHtml(node.label)}</strong> <span>${escapeHtml(node.probability)}% phishing</span></summary></details></li>`;
+  }
+  return `
+    <li class="tree-node${visited}">
+      <details ${node.visited ? "open" : ""}>
+        <summary>${escapeHtml(node.feature)} &lt; ${escapeHtml(node.threshold)} <span>${escapeHtml(node.probability)}%</span></summary>
+        <ul>
+          <li class="branch-label">Sí ${renderTreeNode(node.left)}</li>
+          <li class="branch-label">No ${renderTreeNode(node.right)}</li>
+        </ul>
+      </details>
+    </li>
+  `;
+}
+
+function renderXai() {
+  const target = document.querySelector("#xai-content");
+  if (!target) return;
+  if (!result || !result.explanations) {
+    target.innerHTML = `<div class="empty-state compact"><span>Sin análisis</span><p>Ejecuta un análisis para ver el proceso interno de cada técnica.</p></div>`;
+    return;
+  }
+
+  const xai = result.explanations;
+  const tree = xai.decision_tree || {};
+  const bayes = xai.naive_bayes || {};
+  const expert = xai.expert_system || {};
+  const neural = xai.neural_network || {};
+  const comparison = xai.comparison || [];
+  const tabs = [
+    ["tree", "Árbol"],
+    ["bayes", "Naive Bayes"],
+    ["expert", "Sistema experto"],
+    ["neural", "Red neuronal"],
+    ["compare", "Comparación"],
+  ];
+
+  const treeSteps = (tree.path || []).map((step) => `
+    <article class="timeline-item">
+      <span>Paso ${escapeHtml(step.step)}</span>
+      <strong>${escapeHtml(step.condition)}</strong>
+      <p>Valor: ${escapeHtml(step.value)}. Resultado: ${escapeHtml(step.decision)}. Rama: ${escapeHtml(step.branch)}.</p>
+    </article>
+  `).join("");
+
+  const bayesRows = (bayes.conditionals || []).map((row) => `
+    <tr>
+      <td>${escapeHtml(row.token)}</td>
+      <td>${escapeHtml(row.classes?.Phishing?.conditional_probability ?? "")}</td>
+      <td>${escapeHtml(row.classes?.Seguro?.conditional_probability ?? "")}</td>
+      <td>${escapeHtml(row.classes?.Phishing?.log_probability ?? "")}</td>
+      <td>${escapeHtml(row.classes?.Seguro?.log_probability ?? "")}</td>
+    </tr>
+  `).join("");
+
+  const ruleCards = (expert.rules || []).map((rule) => `
+    <article class="rule-card ${rule.active ? "active" : "inactive"}">
+      <span>Regla ${escapeHtml(rule.id)} - ${escapeHtml(rule.state)}</span>
+      <strong>${escapeHtml(rule.name)}</strong>
+      <p>${escapeHtml(rule.rule)}</p>
+      <p>${escapeHtml(rule.active ? rule.evidence : rule.discard_reason)}</p>
+      <b>+${escapeHtml(rule.active ? rule.weight : 0)} | parcial ${escapeHtml(rule.partial_score)}</b>
+    </article>
+  `).join("");
+
+  const neuronBars = (neural.hidden_neurons || []).map((neuron) => `
+    <article class="neuron" title="Suma ponderada: ${escapeHtml(neuron.weighted_sum)} | Peso salida: ${escapeHtml(neuron.outgoing_weight)}">
+      <span>N${escapeHtml(neuron.index + 1)}</span>
+      <i style="height:${Math.max(8, Number(neuron.activation_percent || 0) * 0.7)}px"></i>
+      <strong>${escapeHtml(neuron.activation_percent)}%</strong>
+    </article>
+  `).join("");
+
+  const inputRows = (neural.top_inputs || []).map((item) => `
+    <li><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.value)}</span></li>
+  `).join("");
+
+  const comparisonRows = comparison.map((row) => `
+    <tr>
+      <td>${escapeHtml(row.model)}</td>
+      <td>${escapeHtml(row.result)}</td>
+      <td>${escapeHtml(row.confidence)}%</td>
+      <td>${escapeHtml(row.time_ms)} ms</td>
+      <td>${escapeHtml((row.influential_variables || []).join(", "))}</td>
+      <td>${escapeHtml(row.summary)}</td>
+    </tr>
+  `).join("");
+
+  target.innerHTML = `
+    <div class="xai-tabs" role="tablist">
+      ${tabs.map(([id, label], index) => `<button type="button" class="xai-tab ${index === 0 ? "active" : ""}" data-xai-tab="${id}">${escapeHtml(label)}</button>`).join("")}
+    </div>
+    <div class="xai-view active" data-xai-view="tree">
+      <div class="xai-grid">
+        <div class="xai-card">
+          <h3>Ruta recorrida</h3>
+          <div class="timeline">${treeSteps || "<p>No hubo nodos intermedios.</p>"}</div>
+          <div class="xai-final">Hoja final: ${escapeHtml(tree.leaf?.class || "")} (${escapeHtml(tree.leaf?.probability || 0)}%)</div>
+        </div>
+        <div class="xai-card">
+          <h3>Árbol visual</h3>
+          <ul class="decision-tree">${renderTreeNode(tree.tree)}</ul>
+        </div>
+      </div>
+    </div>
+    <div class="xai-view" data-xai-view="bayes">
+      <div class="xai-card">
+        <h3>Fórmula aplicada</h3>
+        <p>${escapeHtml(bayes.formula || "")}</p>
+        <div class="prob-grid">
+          <article><span>P(Phishing)</span><strong>${escapeHtml(bayes.priors?.Phishing?.probability || 0)}</strong></article>
+          <article><span>P(Seguro)</span><strong>${escapeHtml(bayes.priors?.Seguro?.probability || 0)}</strong></article>
+          <article><span>Posterior phishing</span><strong>${escapeHtml(bayes.posteriors?.Phishing || 0)}%</strong></article>
+          <article><span>Posterior seguro</span><strong>${escapeHtml(bayes.posteriors?.Seguro || 0)}%</strong></article>
+        </div>
+      </div>
+      <details class="xai-card" open>
+        <summary>Tabla de probabilidades condicionales</summary>
+        <div class="table-scroll"><table><thead><tr><th>Token</th><th>P(token|phishing)</th><th>P(token|seguro)</th><th>log phishing</th><th>log seguro</th></tr></thead><tbody>${bayesRows}</tbody></table></div>
+      </details>
+    </div>
+    <div class="xai-view" data-xai-view="expert">
+      <div class="xai-card">
+        <h3>Inferencia</h3>
+        <p>${escapeHtml(expert.inference_type || "")}. ${escapeHtml(expert.textual_explanation || "")}</p>
+        <div class="xai-final">Conclusión: ${escapeHtml(expert.final_class || "")} | puntaje ${escapeHtml(expert.final_score || 0)}</div>
+      </div>
+      <details class="xai-card" open>
+        <summary>Reglas evaluadas</summary>
+        <div class="rule-grid">${ruleCards}</div>
+      </details>
+    </div>
+    <div class="xai-view" data-xai-view="neural">
+      <div class="xai-grid">
+        <div class="xai-card">
+          <h3>Flujo de la red</h3>
+          <p>${escapeHtml(neural.activation_function || "")}</p>
+          <div class="network-diagram">
+            <div><span>Entrada</span><strong>${escapeHtml(neural.layers?.[0]?.count || 0)}</strong></div>
+            <div><span>Capa oculta</span><strong>${escapeHtml(neural.layers?.[1]?.count || 0)}</strong></div>
+            <div><span>Salida</span><strong>${escapeHtml(neural.output?.probability_phishing || 0)}%</strong></div>
+          </div>
+          <ul class="feature-list">${inputRows}</ul>
+        </div>
+        <div class="xai-card">
+          <h3>Activaciones de neuronas</h3>
+          <div class="neuron-grid">${neuronBars}</div>
+        </div>
+      </div>
+    </div>
+    <div class="xai-view" data-xai-view="compare">
+      <div class="xai-card">
+        <h3>Comparación entre modelos</h3>
+        <p>Votos phishing: ${escapeHtml(xai.agreement?.phishing_votes || 0)}. Votos seguro: ${escapeHtml(xai.agreement?.safe_votes || 0)}. Discrepancias: ${escapeHtml((xai.agreement?.discrepancies || []).join(", ") || "ninguna")}.</p>
+        <div class="table-scroll"><table><thead><tr><th>Modelo</th><th>Resultado</th><th>Confianza</th><th>Tiempo</th><th>Variables influyentes</th><th>Resumen</th></tr></thead><tbody>${comparisonRows}</tbody></table></div>
+      </div>
+    </div>
+  `;
+
+  target.querySelectorAll(".xai-tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.xaiTab;
+      target.querySelectorAll(".xai-tab").forEach((tab) => tab.classList.toggle("active", tab === button));
+      target.querySelectorAll(".xai-view").forEach((view) => view.classList.toggle("active", view.dataset.xaiView === id));
+    });
+  });
+}
+
 function renderIndicators() {
   const list = document.querySelector("#indicator-list");
   if (!list) return;
@@ -302,6 +474,7 @@ function renderHistory() {
 
 renderMetrics();
 renderResult();
+renderXai();
 renderIndicators();
 renderHistory();
 

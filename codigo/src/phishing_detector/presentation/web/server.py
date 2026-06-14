@@ -53,6 +53,7 @@ def result_to_dict(result, report_url=""):
         "metrics": result.metrics,
         "is_risky": result.is_risky,
         "report_url": report_url,
+        "explanations": result.explanations,
     }
 
 

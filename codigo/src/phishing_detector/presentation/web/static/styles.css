@@ -203,6 +203,7 @@ button:hover {
 
 .hero-panel,
 .analysis-panel,
+.xai-panel,
 .insight-panel,
 .indicator-panel,
 .history-panel,
@@ -217,6 +218,7 @@ button:hover {
 }
 
 .analysis-panel:hover,
+.xai-panel:hover,
 .insight-panel:hover,
 .indicator-panel:hover,
 .history-panel:hover,
@@ -371,6 +373,7 @@ button:hover {
 }
 
 .analysis-panel,
+.xai-panel,
 .insight-panel,
 .indicator-panel,
 .history-panel,
@@ -874,6 +877,228 @@ button:disabled {
   grid-column: 2;
 }
 
+.xai-panel {
+  grid-column: 1 / -1;
+}
+
+.xai-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.xai-tab {
+  min-height: 38px;
+  color: #263244;
+  background: rgba(242, 246, 251, .92);
+  box-shadow: none;
+}
+
+.xai-tab.active {
+  color: #fff;
+  background: #111827;
+}
+
+.xai-view {
+  display: none;
+}
+
+.xai-view.active {
+  display: block;
+}
+
+.xai-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.xai-card {
+  padding: 18px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.xai-card h3 {
+  margin: 0 0 12px;
+}
+
+.xai-final {
+  margin-top: 12px;
+  padding: 12px;
+  color: #0f172a;
+  font-weight: 850;
+  background: rgba(10, 132, 255, .09);
+  border-radius: 14px;
+}
+
+.timeline {
+  display: grid;
+  gap: 10px;
+}
+
+.timeline-item {
+  padding: 12px;
+  border-left: 4px solid var(--blue);
+  background: rgba(245, 247, 251, .9);
+  border-radius: 12px;
+}
+
+.timeline-item span,
+.rule-card span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.decision-tree,
+.decision-tree ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: none;
+}
+
+.tree-node {
+  margin: 8px 0;
+  padding: 8px;
+  border-left: 3px solid rgba(37, 48, 66, .14);
+  border-radius: 12px;
+}
+
+.tree-node.visited {
+  border-left-color: var(--blue);
+  background: rgba(10, 132, 255, .08);
+}
+
+.tree-node.muted {
+  opacity: .48;
+}
+
+.tree-node summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.branch-label {
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.prob-grid,
+.rule-grid,
+.neuron-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.prob-grid article,
+.rule-card {
+  padding: 12px;
+  background: rgba(245, 247, 251, .86);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.prob-grid span {
+  display: block;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.prob-grid strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 24px;
+}
+
+.rule-card.active {
+  border-color: rgba(23, 166, 115, .28);
+  background: rgba(23, 166, 115, .08);
+}
+
+.rule-card.inactive {
+  opacity: .72;
+}
+
+.network-diagram {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.network-diagram div {
+  padding: 14px;
+  text-align: center;
+  background: rgba(10, 132, 255, .08);
+  border-radius: 16px;
+}
+
+.network-diagram span,
+.feature-list span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.feature-list {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(245, 247, 251, .86);
+  border-radius: 12px;
+}
+
+.neuron-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+  min-height: 130px;
+}
+
+.neuron {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.neuron i {
+  display: block;
+  width: 22px;
+  background: linear-gradient(180deg, var(--blue), var(--cyan));
+  border-radius: 999px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.table-scroll table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
 .indicator-form {
   margin-top: 14px;
 }
@@ -1094,6 +1319,10 @@ button:disabled {
     grid-column: 1 / -1;
   }
 
+  .xai-grid {
+    grid-template-columns: 1fr;
+  }
+
   .architecture-strip {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1162,6 +1391,7 @@ button:disabled {
   }
 
   .analysis-panel,
+  .xai-panel,
   .insight-panel,
   .indicator-panel,
   .history-panel,
@@ -1174,6 +1404,10 @@ button:disabled {
   .tech-grid,
   .summary-grid,
   .match-grid,
+  .prob-grid,
+  .rule-grid,
+  .network-diagram,
+  .neuron-grid,
   .field-grid,
   .indicator-list,
   .history-list,

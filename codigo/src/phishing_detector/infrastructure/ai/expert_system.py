@@ -109,3 +109,96 @@ class SecurityExpertSystem:
         }
 
         return min(score, 100), reasons, matches, email_summary
+
+    def explain(self, request: EmailAnalysisRequest):
+        text = f"{request.subject} {request.body} {request.sender} {request.reply_to} {request.authentication_results}".lower()
+        tokens = set(tokenize(text))
+        parsed = urlparse(request.url if "://" in request.url else ("http://" + request.url if request.url else ""))
+        domain = parsed.netloc.lower()
+        tld = domain.rsplit(".", 1)[-1] if "." in domain else ""
+        attachment_names = " ".join(item.filename for item in request.attachments)
+        auth = request.authentication_results.lower()
+        custom_text = f"{text} {request.url.lower()} {' '.join(request.links).lower()} {attachment_names.lower()}"
+
+        rules = [
+            ("Transporte inseguro", "SI la URL no usa HTTPS ENTONCES aumentar riesgo.", bool(request.url and not request.url.startswith("https://")), "La URL inicia con http://." if request.url and not request.url.startswith("https://") else "No hay URL o la URL usa HTTPS.", 15),
+            ("IP en URL", "SI el dominio es una IP ENTONCES aumentar riesgo.", bool(re.match(r"^\d{1,3}(\.\d{1,3}){3}", domain)), f"Dominio evaluado: {domain or 'vacío'}.", 18),
+            ("Acortador", "SI el dominio usa acortador ENTONCES aumentar riesgo.", any(short in domain for short in SHORTENERS), f"Dominio evaluado: {domain or 'vacío'}.", 12),
+            ("TLD sospechoso", "SI el TLD está en la lista sospechosa ENTONCES aumentar riesgo.", tld in SUSPICIOUS_TLDS, f"TLD evaluado: {tld or 'sin TLD'}.", 10),
+            ("Dominio complejo", "SI hay muchos subdominios o guiones ENTONCES aumentar riesgo.", domain.count("-") >= 2 or domain.count(".") >= 3, f"Puntos: {domain.count('.')}, guiones: {domain.count('-')}.", 10),
+            ("Punycode", "SI el dominio contiene xn-- ENTONCES posible homógrafo.", "xn--" in domain, f"Dominio evaluado: {domain or 'vacío'}.", 18),
+            ("Urgencia", "SI aparecen palabras de urgencia ENTONCES aumentar riesgo.", bool(tokens & URGENCY_WORDS), f"Coincidencias: {', '.join(sorted(tokens & URGENCY_WORDS)) or 'ninguna'}.", 12),
+            ("Solicitud de credenciales", "SI solicita usuario, contraseña o token ENTONCES aumentar riesgo.", bool(tokens & CREDENTIAL_WORDS), f"Coincidencias: {', '.join(sorted(tokens & CREDENTIAL_WORDS)) or 'ninguna'}.", 14),
+            ("Señuelo financiero", "SI menciona bancos, pagos, premios o tarjetas ENTONCES aumentar riesgo.", bool(tokens & MONEY_WORDS), f"Coincidencias: {', '.join(sorted(tokens & MONEY_WORDS)) or 'ninguna'}.", 10),
+            ("Extensión riesgosa", "SI menciona adjuntos ejecutables o comprimidos ENTONCES aumentar riesgo.", bool(re.search(r"\.(exe|scr|bat|cmd|js|vbs|msi|iso|lnk|zip|rar)\b", text + " " + request.url.lower() + " " + attachment_names.lower())), f"Adjuntos: {attachment_names or 'ninguno'}.", 16),
+            ("Llamado genérico", "SI invita a hacer clic sin contexto ENTONCES aumentar riesgo.", "haga clic" in text or "clic aqui" in text or "clic aquí" in text, "Se revisaron frases de llamado genérico.", 8),
+            ("Múltiples enlaces", "SI contiene muchos enlaces ENTONCES aumentar riesgo.", len(request.links) >= 5, f"Enlaces detectados: {len(request.links)}.", 8),
+            ("Reply-To distinto", "SI Reply-To no coincide con From ENTONCES aumentar riesgo.", bool(request.reply_to and request.sender and request.reply_to.split("@")[-1] != request.sender.split("@")[-1]), f"From: {request.sender or 'vacío'}, Reply-To: {request.reply_to or 'vacío'}.", 16),
+            ("Return-Path distinto", "SI Return-Path no coincide con From ENTONCES aumentar riesgo.", bool(request.return_path and request.sender and request.return_path.split("@")[-1] != request.sender.split("@")[-1]), f"From: {request.sender or 'vacío'}, Return-Path: {request.return_path or 'vacío'}.", 12),
+            ("SPF fail", "SI SPF falla ENTONCES aumentar riesgo.", "spf=fail" in auth, "Se revisó Authentication-Results.", 18),
+            ("DKIM fail", "SI DKIM falla ENTONCES aumentar riesgo.", "dkim=fail" in auth, "Se revisó Authentication-Results.", 18),
+            ("DMARC fail", "SI DMARC falla ENTONCES aumentar riesgo.", "dmarc=fail" in auth, "Se revisó Authentication-Results.", 20),
+            ("Adjunto sin contexto", "SI hay adjuntos y casi no hay cuerpo ENTONCES aumentar riesgo.", bool(request.attachments and not request.body), f"Adjuntos: {len(request.attachments)}, cuerpo vacío: {not bool(request.body)}.", 10),
+        ]
+
+        evaluated = []
+        timeline = []
+        running_score = 0
+        for index, (name, statement, active, evidence, weight) in enumerate(rules, start=1):
+            if active:
+                running_score += weight
+            state = "Activada" if active else "Descartada"
+            reason = "Se cumplieron las condiciones." if active else f"No se cumplieron las condiciones. {evidence}"
+            item = {
+                "id": index,
+                "name": name,
+                "rule": statement,
+                "state": state,
+                "active": active,
+                "weight": weight,
+                "evidence": evidence,
+                "discard_reason": "" if active else reason,
+                "partial_score": min(running_score, 100),
+            }
+            evaluated.append(item)
+            timeline.append(f"Regla {index}: {name} -> {state}. Puntaje parcial: {min(running_score, 100)}.")
+
+        for indicator in self.indicator_provider():
+            if not indicator.enabled or not indicator.pattern:
+                continue
+            try:
+                active = bool(re.search(indicator.pattern, custom_text, re.IGNORECASE))
+            except re.error:
+                active = False
+            if active:
+                running_score += indicator.weight
+            evaluated.append({
+                "id": len(evaluated) + 1,
+                "name": indicator.name,
+                "rule": f"SI coincide el patrón personalizado '{indicator.pattern}' ENTONCES aumentar riesgo.",
+                "state": "Activada" if active else "Descartada",
+                "active": active,
+                "weight": indicator.weight,
+                "evidence": "Patrón encontrado en texto, URL, enlaces o adjuntos." if active else "El patrón no apareció en la evidencia analizada.",
+                "discard_reason": "" if active else "No hubo coincidencia con el patrón personalizado.",
+                "partial_score": min(running_score, 100),
+            })
+
+        return {
+            "inference_type": "Encadenamiento hacia adelante",
+            "facts": {
+                "domain": domain,
+                "tld": tld,
+                "tokens": sorted(tokens)[:40],
+                "attachments": [item.filename for item in request.attachments],
+                "links": request.links,
+            },
+            "rules": evaluated,
+            "timeline": timeline,
+            "intermediate_conclusions": [
+                item["name"] for item in evaluated if item["active"]
+            ],
+            "final_score": min(running_score, 100),
+            "final_class": "Phishing" if min(running_score, 100) >= 50 else "Seguro o bajo riesgo",
+            "textual_explanation": "El motor revisó cada regla contra los hechos extraídos del correo y acumuló peso solo cuando la condición fue verdadera.",
+        }
