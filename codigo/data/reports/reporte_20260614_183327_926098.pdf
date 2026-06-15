@@ -1,0 +1,72 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1893 >>
+stream
+BT
+/F1 10 Tf
+50 790 Td
+14 TL
+(SentinelMail AI - Reporte de analisis) Tj
+T* (Fecha: 2026-06-14 18:33:27) Tj
+T* (Decision: Probable phishing) Tj
+T* (Nivel: ALTO) Tj
+T* (Riesgo final: 100.0%) Tj
+T* (Asunto: Accion requerida: cuenta bloqueada por actividad inusual) Tj
+T* (URL: http://198.51.100.44/secure-login/validar-token.exe) Tj
+T* (Origen: phishing_completo_banco.eml) Tj
+T* () Tj
+T* (Tecnicas:) Tj
+T* (- Red neuronal: 99.99%) Tj
+T* (- Naive Bayes: 100.0%) Tj
+T* (- Arbol de decision: 100.0%) Tj
+T* (- Sistema experto: 100%) Tj
+T* () Tj
+T* (Senales encontradas:) Tj
+T* (- La URL no usa HTTPS.) Tj
+T* (- La URL usa una direccion IP en lugar de un dominio legible.) Tj
+T* (- El dominio contiene muchos subdominios o guiones.) Tj
+T* (- El mensaje presiona con urgencia o vencimiento.) Tj
+T* (- Solicita credenciales, inicio de sesion o token.) Tj
+T* (- Incluye dinero, bancos, pagos, premios o tarjetas.) Tj
+T* (- Menciona adjuntos o rutas potencialmente peligrosas.) Tj
+T* (- Adjunto 'comprobante_pendiente.exe': Extension potencialmente riesgosa.) Tj
+T* (- Adjunto 'comprobante_pendiente.exe': El contenido inicia como ejecutable de Windows.) Tj
+T* (- Adjunto 'documentos_bloqueo.zip': Extension potencialmente riesgosa.) Tj
+T* (- El dominio Reply-To no coincide con el dominio From.) Tj
+T* (- El Return-Path no coincide con el remitente visible.) Tj
+T* (- SPF fallo en Authentication-Results.) Tj
+T* (- DKIM fallo en Authentication-Results.) Tj
+T* () Tj
+T* (Adjuntos:) Tj
+T* (- comprobante_pendiente.exe \(application/octet-stream\): Extension potencialmente riesgosa.,) Tj
+T* (  El contenido inicia como ejecutable de Windows.) Tj
+T* (  SHA-256: a805eb431818bb84fea66a70b0ab77507ffae9900c832b44d1a0f411df46812e) Tj
+T* (- documentos_bloqueo.zip \(application/zip\): Extension potencialmente riesgosa.) Tj
+T* (  SHA-256: dc1634b11e0ce6d400834fae7eedacff3c0ff8dc6d8095f45ab9730b84b2b81d) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+2256
+%%EOF

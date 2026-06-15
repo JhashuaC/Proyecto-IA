@@ -428,5 +428,55 @@
     "level": "BAJO",
     "final_score": 8.37,
     "report_url": "/reports/reporte_20260614_170817_914572.pdf"
+  },
+  {
+    "timestamp": "2026-06-14T18:33:27",
+    "subject": "Accion requerida: cuenta bloqueada por actividad inusual",
+    "url": "http://198.51.100.44/secure-login/validar-token.exe",
+    "source_name": "phishing_completo_banco.eml",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 100.0,
+    "report_url": "/reports/reporte_20260614_183327_926098.pdf"
+  },
+  {
+    "timestamp": "2026-06-14T18:36:43",
+    "subject": "A friendly reminder: Full Access closes tonight",
+    "url": "http://r.mail.w3schools.com/mk/cl/f/sh/WCPzyXJTZ6uvcwXXUkbZEYXDSF4r4n49/yutVSEnW2YQZ",
+    "source_name": "A friendly reminder_ Full Access closes tonight.eml",
+    "decision": "Sospechoso",
+    "level": "MEDIO",
+    "final_score": 65.59,
+    "report_url": "/reports/reporte_20260614_183643_246532.pdf"
+  },
+  {
+    "timestamp": "2026-06-14T18:38:15",
+    "subject": "Aviso de mantenimiento",
+    "url": "https://hosting.example/status",
+    "source_name": "manual",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 0.0,
+    "report_url": "/reports/reporte_20260614_183815_393510.pdf"
+  },
+  {
+    "timestamp": "2026-06-14T18:38:28",
+    "subject": "Aviso de mantenimiento programado",
+    "url": "https://campus.example/status.",
+    "source_name": "legit_demo.eml",
+    "decision": "Probablemente legítimo",
+    "level": "BAJO",
+    "final_score": 0.0,
+    "report_url": "/reports/reporte_20260614_183828_970390.pdf"
+  },
+  {
+    "timestamp": "2026-06-14T18:38:53",
+    "subject": "Accion requerida: cuenta bloqueada por actividad inusual",
+    "url": "http://198.51.100.44/secure-login/validar-token.exe",
+    "source_name": "phishing_completo_banco.eml",
+    "decision": "Probable phishing",
+    "level": "ALTO",
+    "final_score": 100.0,
+    "report_url": "/reports/reporte_20260614_183853_805505.pdf"
   }
 ]
